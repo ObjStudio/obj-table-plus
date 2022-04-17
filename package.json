@@ -1,0 +1,20 @@
+{
+  "name": "obj-table-plus",
+  "version": "1.0.1",
+  "description": "基于vxe-table3.x的快速构建表格组件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vxe-table",
+    "vue",
+    "vue2"
+  ],
+  "author": "ObjStudio-KangxuChen",
+  "license": "MIT",
+  "dependencies": {
+    "element-ui": "^2.15.6",
+    "vxe-table": "^3.4.0"
+  }
+}
