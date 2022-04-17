@@ -1,7 +1,24 @@
+<!--
+ * @Author: chenkangxu
+ * @Date: 2022-04-17 14:38:11
+ * @LastEditTime: 2022-04-17 15:13:53
+ * @LastEditors: chenkangxu
+ * @Description: 
+ * @Github: 
+-->
 # 快速入门
 # 1、引入组件并注册
 ```javascript
 import Vue from 'vue'
+//引入必要的vxe-table 具体配置请查看官方文档
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+Vue.use(VXETable)
+//引入必要的elementUI 具体配置请查看官方文档
+import ElementUI from 'element-ui'; 
+Vue.use(ElementUI);
+
 import objTablePlus from 'obj-table-plus';
 Vue.use(objTablePlus);
 ```
