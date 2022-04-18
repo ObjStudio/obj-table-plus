@@ -1,12 +1,7 @@
-<!--
- * @Author: chenkangxu
- * @Date: 2022-04-17 14:38:11
- * @LastEditTime: 2022-04-17 15:13:53
- * @LastEditors: chenkangxu
- * @Description: 
- * @Github: 
--->
-# 快速入门
+![](https://img.shields.io/badge/license-MIT-blue)![https://www.npmjs.com/package/obj-table-plus](https://img.shields.io/badge/npm-v1.x-yellow)![](https://img.shields.io/badge/ObjStudio-2020.10.21--Now-orange)
+
+# 一、快速上手
+
 # 1、引入组件并注册
 ```javascript
 import Vue from 'vue'
@@ -36,9 +31,190 @@ Vue.use(objTablePlus);
     ...
     // 具体参考文档中的 <vxe-column/> 属性
 ]
-(3)tableProp 参考文档中关于<vxe-table/> 的属性
-(4)tableEvent {click:this.funcA,tap:this.funcB} 具体事件参中的<vxe-table/> 的事件
+*(3)tableProp 参考文档中关于<vxe-table/> 的属性
+*(4)tableEvent {click:this.funcA,tap:this.funcB} 具体事件参中的<vxe-table/> 的事件
 ```
+
+示例代码：
+
+1. 朴素表格——极致简单的表格
+
+   ```vue
+   <template>
+   <obj-table-plus
+                   ref="oTable"
+                   @query="queryList"
+                   :tableData="tableData"
+                   :tableCols="tableCols"
+                   >
+       </obj-table-plus>
+   </template>
+   <script>
+       export default{
+           data(){
+               return {
+                   //表格数据
+                   tableData:[],
+                   //定义表格结构
+                   tableCols:[
+                       { id: "1", field: "name",title:"姓名", width: 120 },
+                       { id: "2", field: "age",title:"年龄", width: 120 },
+                       { id: "3", field: "gender",title:"性别", width: 120 },
+                       { id: "4", field: "phone",title:"联系电话", width: 120 }
+                   ]
+               }
+           },
+           methods:{
+               queryList(pageNo,pageSize){
+                   request(pageNo,pageSize)
+                       .then(res=>{
+                       this.$refs.oTable.complete(res.list,res.total/*此处要传入一个数据量总数*/);
+                   })
+                       .catch(err=>{
+                       this.$refs.oTable.complete(false);
+                   })
+               }
+           }
+       }
+   </script>
+   ```
+
+   
+
+2. 自定义表格——携带自定义参数
+
+   ```vue
+   <template>
+   <obj-table-plus
+                   ref="oTable"
+                   @query="queryList"
+                   :tableData="tableData"
+                   :tableCols="tableCols"
+                   :tableProp="tableProp"
+                   :tableEvent="tableEvent"
+                   >
+       </obj-table-plus>
+   </template>
+   <script>
+       export default{
+           data(){
+               return {
+                   //表格数据
+                   tableData:[],
+                   //定义表格结构
+                   tableCols:[
+                       { id: "1", field: "name",title:"姓名", width: 120 },
+                       { id: "2", field: "age",title:"年龄", width: 120 },
+                       { id: "3", field: "gender",title:"性别", width: 120 },
+                       { id: "4", field: "phone",title:"联系电话", width: 120 }
+                   ],
+                   //表格参数
+                   tableProp:{
+                       "auto-resize": true,
+                       border: true,
+                       "row-id": "id",
+                       //带多选
+                       "checkbox-config": { labelField: "", checkRowKeys: [10053, 23666] },
+                       "max-height": "400px",
+                       "highlight-current-row": true,
+                       "show-overflow": true,
+                   },
+                   //表格事件
+                   tableEvent:{
+                       "checkbox-change": this.selectChangeEvent,
+                   }
+               }
+           },
+           methods:{
+               queryList(pageNo,pageSize){
+                   request(pageNo,pageSize)
+                       .then(res=>{
+                       this.$refs.oTable.complete(res.list,res.total/*此处要传入一个数据量总数*/);
+                   })
+                       .catch(err=>{
+                       this.$refs.oTable.complete(false);
+                   })
+               },
+               selectChangeEvent(e){
+                   // TODO...选中事件
+               }
+           }
+       }
+   </script>
+   ```
+
+3. 多级表格
+
+   ```vue
+   <template>
+   <obj-table-plus
+                   ref="oTable"
+                   @query="queryList"
+                   :tableData="tableData"
+                   :tableCols="tableCols"
+                   :tableProp="tableProp"
+                   :tableEvent="tableEvent"
+                   >
+       </obj-table-plus>
+   </template>
+   <script>
+       export default{
+           data(){
+               return {
+                   //表格数据
+                   tableData:[],
+                   //定义表格结构
+                   tableCols:[
+                       { id: "1", field: "name",title:"姓名", width: 120 },
+                       { id: "2", field: "age",title:"年龄", width: 120 },
+                       { id: "3", field: "gender",title:"性别", width: 120 },
+                       { id: "4", field: "phone",title:"联系电话", width: 120 },
+                       {id:"5",field:"location",title:"所在地区",childTableCols:[
+                           {id:"51",field:"province",title:"省份"},
+                           {id:"52",field:"city",title:"城市"},
+                           {id:"53",field:"area",title:"区"},
+                       ]}
+                   ],
+                   //表格参数
+                   tableProp:{
+                       "auto-resize": true,
+                       border: true,
+                       "row-id": "id",
+                       //带多选
+                       "checkbox-config": { labelField: "", checkRowKeys: [10053, 23666] },
+                       "max-height": "400px",
+                       "highlight-current-row": true,
+                       "show-overflow": true,
+                   },
+                   //表格事件
+                   tableEvent:{
+                       "checkbox-change": this.selectChangeEvent,
+                   }
+               }
+           },
+           methods:{
+               queryList(pageNo,pageSize){
+                   request(pageNo,pageSize)
+                       .then(res=>{
+                       /*注意：这边的list要对应上children才可以正确渲染
+                       具体参考vxe-table文档https://vxetable.cn/v3/#/table/grid/group*/
+                       this.$refs.oTable.complete(res.list,res.total/*此处要传入一个数据量总数*/);
+                   })
+                       .catch(err=>{
+                       this.$refs.oTable.complete(false);
+                   })
+               },
+               selectChangeEvent(e){
+                   // TODO...选中事件
+               }
+           }
+       }
+   </script>
+   ```
+
+   
+
+
 
 # 3、表格可选参数/插槽
 ```javascript
@@ -46,3 +222,26 @@ Vue.use(objTablePlus);
 (2)slot insert 表格上插槽 一般用于插入一个表单来进行检索
 ```
 
+
+
+# 二、模板示例
+
+
+
+
+
+敬请期待。。。
+
+
+
+
+
+## 🎉 结束语
+
+###  👋 我们需要你的贡献
+
+我们深知它还有非常大的完善空间，所以我们始终欢迎你的贡献。
+
+#### 👣 如何贡献
+
+可以通过提交 [Issue](https://gitee.com/objstudio/obj-table-plus/issues/new?issue%5Bassignee_id%5D=0&issue%5Bmilestone_id%5D=0) 和 PR 的方式对「obj-table-plus」做出贡献或是提出需求，更详尽的步骤可以参考[贡献指南](https://gitee.com/objstudio/obj-table-plus/contributor-guidelines.md)。
