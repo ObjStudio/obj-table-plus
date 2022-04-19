@@ -15,6 +15,8 @@
   "license": "MIT",
   "dependencies": {
     "element-ui": "^2.15.6",
-    "vxe-table": "^3.4.0"
+    "vxe-table": "^3.4.0",
+    "xe-utils": "^3.4.0",
+    "vue-fragment": "^1.5.2"
   }
 }
