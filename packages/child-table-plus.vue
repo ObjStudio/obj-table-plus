@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 19:20:30
- * @LastEditTime: 2022-04-17 12:18:29
+ * @LastEditTime: 2022-04-19 14:03:33
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table的子table
  * @Github: 
@@ -262,8 +262,10 @@
 </template>
 
 <script>
+import { Fragment } from 'vue-fragment'
 export default {
   name: "childTablePlus",
+  components: { Fragment },
   data() {
     return {};
   },
