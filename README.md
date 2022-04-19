@@ -44,7 +44,7 @@ Vue.use(objTablePlus);
    <obj-table-plus
                    ref="oTable"
                    @query="queryList"
-                   :tableData="tableData"
+                   v-model="tableData"
                    :tableCols="tableCols"
                    >
        </obj-table-plus>
@@ -88,7 +88,7 @@ Vue.use(objTablePlus);
    <obj-table-plus
                    ref="oTable"
                    @query="queryList"
-                   :tableData="tableData"
+                   v-model="tableData"
                    :tableCols="tableCols"
                    :tableProp="tableProp"
                    :tableEvent="tableEvent"
@@ -150,7 +150,7 @@ Vue.use(objTablePlus);
    <obj-table-plus
                    ref="oTable"
                    @query="queryList"
-                   :tableData="tableData"
+                   v-model="tableData"
                    :tableCols="tableCols"
                    :tableProp="tableProp"
                    :tableEvent="tableEvent"
@@ -224,7 +224,29 @@ Vue.use(objTablePlus);
 
 
 
-# 二、模板示例
+# 二、Props
+
+| 参数         | 说明         | 类型          | 默认值 | 可选值 |
+| ------------ | ------------ | ------------- | ------ | ------ |
+| tableData    | 表格内容数据 | Array<Object> | []     |        |
+| tableCols    | 表格列的配置 | Array<Object> | []     |        |
+| tableProp    | 表格配置项   | Object        | {}     |        |
+| tableEvent   | 表格事件配置 | Object        | {}     |        |
+| toolbarProp  | 工具栏配置   | Object        | {}     |        |
+| toolbarEvent | 工具栏事件   | Object        | {}     |        |
+| isPagination | 是否分页     | Boolean       | true   | false  |
+
+# 三 、Method
+
+| 方法名 | 说明     | 参数                             |
+| ------ | -------- | -------------------------------- |
+| query  | 请求参数 | 返回一个分页信息 pageNo,pageSize |
+|        |          |                                  |
+|        |          |                                  |
+
+
+
+# 四、模板示例
 
 
 
