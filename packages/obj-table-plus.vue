@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-08 10:55:05
+ * @LastEditTime: 2022-05-18 20:55:15
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -230,7 +230,7 @@ export default {
 
 <style scoped>
 .table-handle {
-  margin: 10px 0;
+  /* margin: 10px 0; */
 }
 
 </style>
