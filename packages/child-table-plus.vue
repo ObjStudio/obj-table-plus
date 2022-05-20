@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 19:20:30
- * @LastEditTime: 2022-04-19 14:03:33
+ * @LastEditTime: 2022-05-20 21:55:09
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table的子table
  * @Github: 
@@ -21,15 +21,18 @@
       >
       </vxe-column>
       
+      <!-- 自定义表格内容 -->
       <vxe-column v-else
         :width="col.width"
         :align="col.align"
         :tree-node="col.tree"
         :title="col.title"
-        v-bind="col"
+        v-bind="{...col,type:undefined}"
         :key="col.id"
       >
       <template slot-scope="scope">
+        <!-- jsx 返回jsx数据-->
+        <render v-if="col.type==='jsx'" :render="col.render(scope)"></render>
         <!-- html -->
         <span v-if="col.type === 'html'" v-html="col.html(scope.row)"></span>
         <!-- 按钮 -->
@@ -263,9 +266,10 @@
 
 <script>
 import { Fragment } from 'vue-fragment'
+import Render from './render/index.vue';
 export default {
   name: "childTablePlus",
-  components: { Fragment },
+  components: { Fragment,Render},
   data() {
     return {};
   },

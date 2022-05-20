@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-18 20:55:15
+ * @LastEditTime: 2022-05-20 21:13:57
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -127,6 +127,8 @@ export default {
     size: { type: String, default: "medium" },
     // 是否显示分页
     isPagination: { type: Boolean, default: true },
+    //是否自动请求数据
+    enableAutoQuery:{type:Boolean,default:true}
   },
   data() {
     return {
@@ -151,7 +153,7 @@ export default {
       //加载数据总数
       this.tablePage.total=total;
       if(data!==false){
-        if(data.length>0){
+        if(data.length>=0){
           this.$emit("updateTableData", data);
         }else{
           // this.$emit("updateTableData", data);
@@ -223,7 +225,7 @@ export default {
     }catch(e){
       console.warn(e)
     }
-    this._queryData();
+    if(this.enableAutoQuery==true) this._queryData();
   },
 };
 </script>

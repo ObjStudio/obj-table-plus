@@ -1,6 +1,6 @@
 {
   "name": "obj-table-plus",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "基于vxe-table3.x的快速构建表格组件",
   "main": "index.js",
   "scripts": {
@@ -14,9 +14,10 @@
   "author": "ObjStudio-KangxuChen",
   "license": "MIT",
   "dependencies": {
+    "@vue/babel-preset-jsx": "^1.2.4",
     "element-ui": "^2.15.6",
+    "vue-fragment": "^1.5.2",
     "vxe-table": "^3.4.0",
-    "xe-utils": "^3.4.0",
-    "vue-fragment": "^1.5.2"
+    "xe-utils": "^3.4.0"
   }
 }
