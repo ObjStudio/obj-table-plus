@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 19:20:30
- * @LastEditTime: 2022-05-20 21:55:09
+ * @LastEditTime: 2022-05-21 18:49:36
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table的子table
  * @Github: 
@@ -22,7 +22,7 @@
       </vxe-column>
       
       <!-- 自定义表格内容 -->
-      <vxe-column v-else
+      <vxe-column v-if="col.diy"
         :width="col.width"
         :align="col.align"
         :tree-node="col.tree"
@@ -30,7 +30,7 @@
         v-bind="{...col,type:undefined}"
         :key="col.id"
       >
-      <template slot-scope="scope">
+        <template slot-scope="scope">
         <!-- jsx 返回jsx数据-->
         <render v-if="col.type==='jsx'" :render="col.render(scope)"></render>
         <!-- html -->
@@ -246,19 +246,18 @@
             {{ scope.row[col.prop] }}
           </p>
         </span>
-      </template>
+        </template>
       </vxe-column>
     </template>
     <!-- 如果还有子 就递归自己 -->
     <template v-if="col.childTableCols" >
-      <vxe-colgroup :title="col.title">
-        <template v-for="item in col.childTableCols">
-          <child-table-plus
-            :key="item.id"
-            :col="item"
-            :size="size"
-          ></child-table-plus>
-        </template>
+      <vxe-colgroup v-bind="col">
+        <child-table-plus
+          v-for="item in col.childTableCols"
+          :key="item.id"
+          :col="item"
+          :size="size"
+        ></child-table-plus>
       </vxe-colgroup>
     </template>
   </fragment>
@@ -266,7 +265,7 @@
 
 <script>
 import { Fragment } from 'vue-fragment'
-import Render from './render/index.vue';
+import Render from './components/render/index.vue';
 export default {
   name: "childTablePlus",
   components: { Fragment,Render},

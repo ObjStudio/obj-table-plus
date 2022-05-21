@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-20 21:13:57
+ * @LastEditTime: 2022-05-21 18:46:19
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -60,12 +60,13 @@
         :data="tableData"
         :loading="loading"
         v-bind="tableProp"
+        :tableHeight="tableHeight"
         v-on="tableEvent"
       >
-        <template v-for="item in _tableCols">
-          <child-table-plus :key="item.id" :col="item" :size="size">
-          </child-table-plus>
-        </template>
+        <child-table-plus 
+          v-for="item in _tableCols"
+          :key="item.id" :col="item" :size="size">
+        </child-table-plus>
       </vxe-table>
     </section>
     <!-- 分页 -->
@@ -83,6 +84,7 @@
 </template>
 
 <script>
+import utils from "./utils";
 import childTablePlus from "./child-table-plus.vue";
 export default {
   name:"obj-table-plus",
@@ -103,16 +105,12 @@ export default {
     // 多个属性值
     tableProp: {
       type: Object,
-      default: () => {
-        return {};
-      },
+      default: ()=>utils.getConfig('table-prop',{})
     },
     //工具栏配置项
     toolbarProp:{
       type:Object,
-      default:()=>{
-        return {custom:true,print:true,buttons:[{name:'搜索',type:'button'}]}
-      }
+      default:()=>utils.getConfig('toolbar-prop',{custom:true,print:true})
     },
     //工具栏事件
     toolbarEvent:{
@@ -126,9 +124,15 @@ export default {
     // 表格型号：mini,medium,small
     size: { type: String, default: "medium" },
     // 是否显示分页
-    isPagination: { type: Boolean, default: true },
+    isPagination: { 
+      type: Boolean,
+      default:utils.getConfig('is-pagination',true)
+    },
     //是否自动请求数据
-    enableAutoQuery:{type:Boolean,default:true}
+    enableAutoQuery:{
+      type:Boolean,
+      default:utils.getConfig('enable-auto-query',true)
+    }
   },
   data() {
     return {
@@ -188,12 +192,49 @@ export default {
       // 请求数据queryList(pageNo,pageSize)
       this.$emit("query",this.tablePage.currentPage,this.tablePage.pageSize);
       this.loading=true;
+    },
+    /**
+     * 不知道为啥第一列总是会跑到最后一列去
+     */
+    //递归处理下tableCols
+    _handleChildTableCols(childTableCols){
+      // debugger;
+      let newChildTableCols=[{id:utils.getUid(),width:'0%'}];
+      childTableCols.forEach(col=>{
+      // debugger;
+        if(col.childTableCols&&col.childTableCols.length>0){
+          col.childTableCols=this._handleChildTableCols(col.childTableCols);
+        }
+        newChildTableCols.push({
+          ...col,
+          id:utils.getUid()
+        })
+      })
+      return newChildTableCols;
     }
   },
   computed:{
     //暴力解决下表格列排版问题
+    //增加自生成id
     _tableCols(){
-      return [{ id: "custableplus", width: '0%' }].concat(this.tableCols)
+      // debugger;
+      let newTableCols=[{ id: "custableplus", width: '0%' }];
+      this.tableCols.forEach(col=>{
+        if(col.childTableCols&&col.childTableCols.length>0){
+          col.childTableCols=this._handleChildTableCols(col.childTableCols);
+        }
+        newTableCols.push({
+          ...col,
+          id:utils.getUid()
+        })
+
+      })
+
+      // let newTableCols=_handleChildTableCols
+
+
+      console.log(newTableCols);
+      return newTableCols;
     }
   },
   created(){

@@ -1,5 +1,7 @@
 ![](https://img.shields.io/badge/license-MIT-blue)![https://www.npmjs.com/package/obj-table-plus](https://img.shields.io/badge/npm-v1.x-yellow)![](https://img.shields.io/badge/ObjStudio-2020.10.21--Now-orange)
 
+从1.0.10版本起，tabelCols不再需要配置id，如果配置了也会被组件内部生成的id所替换
+
 # 一、快速上手
 
 # 1、引入组件并注册
@@ -265,6 +267,32 @@ module.exports = {
 ```javascript
 (1)tableHandles 基于elementUI的表格操作按钮
 (2)slot insert 表格上插槽 一般用于插入一个表单来进行检索
+```
+
+# 4、全局配置
+
+在src目录下创建config文件夹，再config文件夹下创建obj-table.config.js作为配置文件，可以根据不同的项目自定义默认配置
+
+```javascript
+module.exports={
+    //对应tableProp的默认值
+    'table-prop':{
+        "auto-resize": true,
+        border: true,
+        "row-id": "id",
+        //带多选
+        "checkbox-config": { labelField: "", checkRowKeys: [10053, 23666] },
+        "highlight-current-row": true,
+        "show-overflow": true,
+        "tree-config": { children: "children" },
+    },
+    //工具栏配置
+    'toolbar-prop':{custom:true},
+    //是否自动查询
+    'enable-auto-query':false,
+    //是否分页
+    'is-pagination':false
+}
 ```
 
 
