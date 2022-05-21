@@ -14,10 +14,13 @@
   "author": "ObjStudio-KangxuChen",
   "license": "MIT",
   "dependencies": {
-    "@vue/babel-preset-jsx": "^1.2.4",
     "element-ui": "^2.15.6",
     "vue-fragment": "^1.5.2",
     "vxe-table": "^3.4.0",
     "xe-utils": "^3.4.0"
+  },
+  "devDependencies":{
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
+    "@vue/babel-preset-jsx": "^1.2.4"
   }
 }
