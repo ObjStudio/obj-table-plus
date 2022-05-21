@@ -20,7 +20,12 @@ Vue.use(objTablePlus);
 如果要使用jsx功能，请在babel.config.js中配置
 ```javascript
 module.exports = {
-    plugins:["@vue/babel-plugin-jsx"],//如果使用了vue-cli4.x以上版本，就不用配置plugins
+    /**
+     * 新版vue-cli4中，已经默认集成了 JSX 语法对 v-model 的支持，可以直接使用 v-model
+     * 如果使用了vue-cli4.x以上版本，就不用配置plugins
+    */
+    plugins:["@vue/babel-plugin-jsx"],
+    //presets中的插件用于配置语法
     presets: [
         '@vue/cli-plugin-babel/preset',
         [
@@ -31,6 +36,14 @@ module.exports = {
         ]
     ]
 }
+```
+项目依赖
+```javascript
+//配置语法
+"@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
+"@vue/babel-preset-jsx": "^1.2.4"
+//只针对vue-cli4以下版本，不支持jsx要使用这个插件
+"@vue/babel-plugin-jsx": "^1.1.1",
 ```
 # 2、添加表格组件必要参数如下：
 ```javascript
@@ -96,7 +109,7 @@ module.exports = {
 
    
 
-2. 自定义表格——携带自定义参数
+2. 自定义表格——携带自定义参数、jsx语法
 
    ```vue
    <template>
@@ -121,7 +134,20 @@ module.exports = {
                        { id: "1", field: "name",title:"姓名", width: 120 },
                        { id: "2", field: "age",title:"年龄", width: 120 },
                        { id: "3", field: "gender",title:"性别", width: 120 },
-                       { id: "4", field: "phone",title:"联系电话", width: 120 }
+                       { id: "4", field: "phone",title:"联系电话", width: 120 },
+                       //自定义表格内容
+                       {
+                           id:"5",
+                           field:"status",
+                           title:"状态",
+                           diy:true,//启用自定义渲染
+                           type:"jsx",//类型是jsx渲染
+                           render:({row})=>{
+                               return (
+                               	<el-button type={row.status==0?'danger':'primary'}>{row.status==0?'异常':'正常'}</el-button>
+                               )
+                           }
+                       }
                    ],
                    //表格参数
                    tableProp:{
@@ -184,11 +210,15 @@ module.exports = {
                        { id: "2", field: "age",title:"年龄", width: 120 },
                        { id: "3", field: "gender",title:"性别", width: 120 },
                        { id: "4", field: "phone",title:"联系电话", width: 120 },
-                       {id:"5",field:"location",title:"所在地区",childTableCols:[
+                       {id:"5",
+                        field:"location",
+                        title:"所在地区",
+                        childTableCols:[
                            {id:"51",field:"province",title:"省份"},
                            {id:"52",field:"city",title:"城市"},
                            {id:"53",field:"area",title:"区"},
-                       ]}
+                         ]
+                       }
                    ],
                    //表格参数
                    tableProp:{
