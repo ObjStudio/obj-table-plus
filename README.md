@@ -17,6 +17,21 @@ Vue.use(ElementUI);
 import objTablePlus from 'obj-table-plus';
 Vue.use(objTablePlus);
 ```
+如果要使用jsx功能，请在babel.config.js中配置
+```javascript
+module.exports = {
+    plugins:["@vue/babel-plugin-jsx"],//如果使用了vue-cli4.x以上版本，就不用配置plugins
+    presets: [
+        '@vue/cli-plugin-babel/preset',
+        [
+            '@vue/babel-preset-jsx',
+            { 
+                'injectH': false 
+            }
+        ]
+    ]
+}
+```
 # 2、添加表格组件必要参数如下：
 ```javascript
 (1) tableData:[
