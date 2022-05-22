@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-21 18:46:19
+ * @LastEditTime: 2022-05-22 15:37:32
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -49,7 +49,7 @@
     <!-- 数据表格 -->
     <section>
       <!-- 工具栏 建议用toolbarProp和toolbarEvent来构建简单的操作按钮-->
-      <template v-if="JSON.stringify(toolbarProp)!='{}'">
+      <template v-if="toolbarProp&&JSON.stringify(toolbarProp)!='{}'">
         <!-- 如果传的是空对象 就不显示工具栏;只有非空才显示工具栏 -->
         <vxe-toolbar ref="xToolbar" v-bind="toolbarProp" v-on="toolbarEvent"></vxe-toolbar>
       </template>
@@ -239,8 +239,10 @@ export default {
   },
   created(){
     this.$nextTick(() => {
-      // 手动将表格和工具栏进行关联
-      this.$refs.vxeTable.connect(this.$refs.xToolbar)
+      if(this.toolbarProp&&JSON.stringify(this.toolbarProp)!='{}'){
+        // 手动将表格和工具栏进行关联
+        this.$refs.vxeTable.connect(this.$refs.xToolbar)
+      }
     })
   },
   mounted() {
