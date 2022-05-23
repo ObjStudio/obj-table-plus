@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-22 15:37:32
+ * @LastEditTime: 2022-05-23 12:35:32
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -85,7 +85,7 @@
 
 <script>
 import utils from "./utils";
-import childTablePlus from "./child-table-plus.vue";
+import childTablePlus from "./components/child-column/child-table-plus.vue";
 export default {
   name:"obj-table-plus",
   components: { childTablePlus },
@@ -199,7 +199,7 @@ export default {
     //递归处理下tableCols
     _handleChildTableCols(childTableCols){
       // debugger;
-      let newChildTableCols=[{id:utils.getUid(),width:'0%'}];
+      let newChildTableCols=[/*{id:utils.getUid(),width:'0%'}*/];
       childTableCols.forEach(col=>{
       // debugger;
         if(col.childTableCols&&col.childTableCols.length>0){
@@ -218,7 +218,7 @@ export default {
     //增加自生成id
     _tableCols(){
       // debugger;
-      let newTableCols=[{ id: "custableplus", width: '0%' }];
+      let newTableCols=[/*{ id: "custableplus", width: '0%' }*/];
       this.tableCols.forEach(col=>{
         if(col.childTableCols&&col.childTableCols.length>0){
           col.childTableCols=this._handleChildTableCols(col.childTableCols);

@@ -1,7 +1,7 @@
 ![](https://img.shields.io/badge/license-MIT-blue)![https://www.npmjs.com/package/obj-table-plus](https://img.shields.io/badge/npm-v1.x-yellow)![](https://img.shields.io/badge/ObjStudio-2020.10.21--Now-orange)
 
 从1.0.10版本起，tabelCols不再需要配置id，如果配置了也会被组件内部生成的id所替换
-
+从1.1.0版本起，tabelCols不再区分diy字段，将vxe原生的type与组件的type进行合并。
 # 一、快速上手
 
 # 1、引入组件并注册
