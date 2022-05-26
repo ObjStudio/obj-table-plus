@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-23 12:35:32
+ * @LastEditTime: 2022-05-26 22:39:38
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -27,8 +27,8 @@
       (2)slot insert 表格上插槽 一般用于插入一个表单来进行检索
 -->
 <template>
-  <section>
-    <section class="table-handle">
+  <div>
+    <div class="table-handle">
       <el-row class="operate" v-if="tableHandles.length > 0">
         <el-col :span="24">
           <el-button
@@ -45,9 +45,9 @@
       <el-row class="operate">
         <slot name="insert"></slot>
       </el-row>
-    </section>
+    </div>
     <!-- 数据表格 -->
-    <section>
+    <div>
       <!-- 工具栏 建议用toolbarProp和toolbarEvent来构建简单的操作按钮-->
       <template v-if="toolbarProp&&JSON.stringify(toolbarProp)!='{}'">
         <!-- 如果传的是空对象 就不显示工具栏;只有非空才显示工具栏 -->
@@ -56,6 +56,7 @@
       <!-- 表格主体 -->
       <vxe-table
         ref="vxeTable"
+        class="vxeTable"
         resizable
         :data="tableData"
         :loading="loading"
@@ -68,19 +69,18 @@
           :key="item.id" :col="item" :size="size">
         </child-table-plus>
       </vxe-table>
-    </section>
+    </div>
     <!-- 分页 -->
-    <section v-if="isPagination">
+    <template v-if="isPagination">
       <vxe-pager
+        v-bind="pagerStyle"
         @page-change="_handlePageChange"
-        background
         :current-page.sync="tablePage.currentPage"
         :page-size.sync="tablePage.pageSize"
-        :total="tablePage.total"
-        :layouts="['PrevJump', 'PrevPage', 'JumpNumber', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']">
+        :total="tablePage.total">
       </vxe-pager>
-    </section>
-  </section>
+    </template>
+  </div>
 </template>
 
 <script>
@@ -132,6 +132,15 @@ export default {
     enableAutoQuery:{
       type:Boolean,
       default:utils.getConfig('enable-auto-query',true)
+    },
+    //自定义分页器样式
+    pagerStyle:{
+      type:Object,
+      default:()=>
+      utils.getConfig('pager-style',{
+        background:true,
+        layouts:['PrevJump', 'PrevPage', 'JumpNumber', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']
+      })
     }
   },
   data() {
@@ -140,8 +149,7 @@ export default {
       tablePage: {
         pageSize: 10,
         currentPage: 1,
-        total: 0,
-        pageSizeRange: [5, 10, 20, 50, 100],
+        total: 0
       },
       //加载动画
       loading:false,
@@ -199,7 +207,7 @@ export default {
     //递归处理下tableCols
     _handleChildTableCols(childTableCols){
       // debugger;
-      let newChildTableCols=[/*{id:utils.getUid(),width:'0%'}*/];
+      let newChildTableCols=[];
       childTableCols.forEach(col=>{
       // debugger;
         if(col.childTableCols&&col.childTableCols.length>0){
@@ -214,11 +222,37 @@ export default {
     }
   },
   computed:{
-    //暴力解决下表格列排版问题
+    /**
+     * 自动生成uuid有以下几个问题：
+     * 1、当tableCols发生变化，如动态增加列，导致每个列都要重新获取一次uuid。
+     *    可以这样做：第一次生成一个内部的tableCols数据，我们称之为_cacheTableCols
+     * 2、当tableCols发生变化时，都要递归重新生成一遍_tableCols，这无疑增加了时间复杂度
+     * 
+     * 拟解决的方法：
+     *  分析这个问题，如果列发生变化，无论如何都需要递归处理，可以这样做：初次渲染后把uuid进行缓存处理
+     *  如第一次渲染生成了8个uuid，当列发生变化时，这8个uuid可以复用，只需要再生成一个uuid即可
+     * 
+     * let cacheUid=[]
+     * const getUid=(index)=>{
+     *  let uid=null;
+     *  if(cacheUid.length>0){
+     *    if(index>cacheUid.length){
+     *      uid=uuidv4();
+     *      cacheUid.push(uid);
+     *    }else{
+     *      return cacheUid[index];
+     *    }
+     *  }else{
+     *    uid=uuidv4();
+     *    cacheUid.push(uid);
+     *  }
+     *  return uid;
+     * }
+     */
     //增加自生成id
     _tableCols(){
       // debugger;
-      let newTableCols=[/*{ id: "custableplus", width: '0%' }*/];
+      let newTableCols=[];
       this.tableCols.forEach(col=>{
         if(col.childTableCols&&col.childTableCols.length>0){
           col.childTableCols=this._handleChildTableCols(col.childTableCols);
@@ -229,11 +263,6 @@ export default {
         })
 
       })
-
-      // let newTableCols=_handleChildTableCols
-
-
-      console.log(newTableCols);
       return newTableCols;
     }
   },
@@ -274,8 +303,15 @@ export default {
 </script>
 
 <style scoped>
-.table-handle {
-  /* margin: 10px 0; */
+/* 默认样式与elementTable拉齐 */
+.vxeTable ::v-deep .vxe-checkbox--icon:before{
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color:#dcdfe6 !important;
+  transition: border-color 0.15s ease-in-out;
 }
-
+.vxeTable ::v-deep .vxe-checkbox--icon:hover:before{
+  border-color:#409EFF !important;
+  transition: border-color 0.15s ease-in-out;
+}
 </style>

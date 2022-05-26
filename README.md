@@ -22,13 +22,9 @@ Vue.use(objTablePlus);
 如果要使用jsx功能，请在babel.config.js中配置
 ```javascript
 module.exports = {
-    /**
-     * 新版vue-cli4中，已经默认集成了 JSX 语法对 v-model 的支持，可以直接使用 v-model
-     * 如果使用了vue-cli4.x以上版本，就不用配置plugins
-    */
-    plugins:["@vue/babel-plugin-jsx"],
-    //presets中的插件用于配置语法
+    //presets中的插件用于配置语法，仅支持vue2.6
     presets: [
+        //脚手架集成jsx增强语法
         '@vue/cli-plugin-babel/preset',
         [
             '@vue/babel-preset-jsx',
@@ -44,8 +40,6 @@ module.exports = {
 //配置语法
 "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
 "@vue/babel-preset-jsx": "^1.2.4"
-//只针对vue-cli4以下版本，不支持jsx要使用这个插件
-"@vue/babel-plugin-jsx": "^1.1.1",
 ```
 # 2、添加表格组件必要参数如下：
 ```javascript
