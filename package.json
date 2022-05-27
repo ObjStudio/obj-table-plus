@@ -1,6 +1,6 @@
 {
   "name": "obj-table-plus",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "基于vxe-table3.x的快速构建表格组件，支持jsx+render函数自定义渲染",
   "main": "index.js",
   "scripts": {
@@ -18,14 +18,14 @@
   "author": "ObjStudio-KangxuChen",
   "license": "MIT",
   "dependencies": {
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
+    "@vue/babel-plugin-jsx": "^1.1.1",
+    "@vue/babel-preset-jsx": "^1.2.4",
     "element-ui": "^2.15.6",
     "uuid": "^8.3.2",
     "vxe-table": "^3.4.0",
     "xe-utils": "^3.4.0"
   },
   "devDependencies": {
-    "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
-    "@vue/babel-plugin-jsx": "^1.1.1",
-    "@vue/babel-preset-jsx": "^1.2.4"
   }
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: chenkangxu
  * @Date: 2022-05-21 14:54:45
- * @LastEditTime: 2022-05-21 18:20:22
+ * @LastEditTime: 2022-05-27 19:22:27
  * @LastEditors: chenkangxu
  * @Description: 
  * @Github: 
@@ -25,11 +25,27 @@ try{
     console.warn('没有读取到配置文件');
 }
 
-
 const utils = {
     //获取唯一id
-    getUid(){
-        return uuidv4();
+    getUid(currentRenderColIndex,enableCacheUuid,cacheUid/*缓存的uuid*/){
+        if(enableCacheUuid==true){
+            let uid=null;
+            if(cacheUid.length>0){
+              if(currentRenderColIndex>cacheUid.length-1){
+                uid=uuidv4();
+                cacheUid.push(uid);
+              }else{
+                return cacheUid[currentRenderColIndex];
+              }
+            }else{
+              uid=uuidv4();
+              cacheUid.push(uid);
+            }
+            return uid;
+        }else{
+            return uuidv4();
+        }
+
     },
     //读取配置项信息
     getConfig(key,defaultValue){

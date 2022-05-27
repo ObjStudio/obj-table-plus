@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-26 22:39:38
+ * @LastEditTime: 2022-05-27 19:27:16
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -27,7 +27,7 @@
       (2)slot insert 表格上插槽 一般用于插入一个表单来进行检索
 -->
 <template>
-  <div>
+  <div class="container">
     <div class="table-handle">
       <el-row class="operate" v-if="tableHandles.length > 0">
         <el-col :span="24">
@@ -47,13 +47,13 @@
       </el-row>
     </div>
     <!-- 数据表格 -->
-    <div>
-      <!-- 工具栏 建议用toolbarProp和toolbarEvent来构建简单的操作按钮-->
-      <template v-if="toolbarProp&&JSON.stringify(toolbarProp)!='{}'">
-        <!-- 如果传的是空对象 就不显示工具栏;只有非空才显示工具栏 -->
-        <vxe-toolbar ref="xToolbar" v-bind="toolbarProp" v-on="toolbarEvent"></vxe-toolbar>
-      </template>
-      <!-- 表格主体 -->
+    <!-- 工具栏 建议用toolbarProp和toolbarEvent来构建简单的操作按钮-->
+    <template v-if="toolbarProp&&JSON.stringify(toolbarProp)!='{}'">
+      <!-- 如果传的是空对象 就不显示工具栏;只有非空才显示工具栏 -->
+      <vxe-toolbar ref="xToolbar" v-bind="toolbarProp" v-on="toolbarEvent"></vxe-toolbar>
+    </template>
+    <!-- 表格主体 -->
+    <div class="flex-1">
       <vxe-table
         ref="vxeTable"
         class="vxeTable"
@@ -141,6 +141,11 @@ export default {
         background:true,
         layouts:['PrevJump', 'PrevPage', 'JumpNumber', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']
       })
+    },
+    //是否缓存uuid,对于列变化比较大的时候启用可以提升性能
+    enableCacheUuid:{
+      type:Boolean,
+      default:utils.getConfig('enable-cache-uuid',false)
     }
   },
   data() {
@@ -153,6 +158,10 @@ export default {
       },
       //加载动画
       loading:false,
+      //当前渲染的列序号
+      currentRenderColIndex:0,
+      //缓存的uuid
+      cacheUid:[]
     };
   },
   methods: {
@@ -215,8 +224,9 @@ export default {
         }
         newChildTableCols.push({
           ...col,
-          id:utils.getUid()
+          id:utils.getUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
         })
+        this.currentRenderColIndex++;
       })
       return newChildTableCols;
     }
@@ -251,6 +261,7 @@ export default {
      */
     //增加自生成id
     _tableCols(){
+      this.currentRenderColIndex=0;
       // debugger;
       let newTableCols=[];
       this.tableCols.forEach(col=>{
@@ -259,8 +270,9 @@ export default {
         }
         newTableCols.push({
           ...col,
-          id:utils.getUid()
+          id:utils.getUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
         })
+        this.currentRenderColIndex++;
 
       })
       return newTableCols;
@@ -303,6 +315,22 @@ export default {
 </script>
 
 <style scoped>
+.container{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+.flex-1{
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;  
+}
 /* 默认样式与elementTable拉齐 */
 .vxeTable ::v-deep .vxe-checkbox--icon:before{
   border-width: 1px !important;

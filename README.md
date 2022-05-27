@@ -21,12 +21,15 @@ Vue.use(objTablePlus);
 ```
 如果要使用jsx功能，请在babel.config.js中配置
 ```javascript
+//Babel 7+. Babel 6 支持, 使用vuejs/babel-plugin-transform-vue-jsx
+//Vue 3支持使用@ant-design-vue/babel-plugin-jsx
 module.exports = {
     //presets中的插件用于配置语法，仅支持vue2.6
     presets: [
         //脚手架集成jsx增强语法
         '@vue/cli-plugin-babel/preset',
         [
+            //支持jsx
             '@vue/babel-preset-jsx',
             { 
                 'injectH': false 
@@ -37,7 +40,7 @@ module.exports = {
 ```
 项目依赖
 ```javascript
-//配置语法
+//vue2官方表示：npm install @vue/babel-preset-jsx @vue/babel-helper-vue-jsx-merge-props --save
 "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
 "@vue/babel-preset-jsx": "^1.2.4"
 ```
