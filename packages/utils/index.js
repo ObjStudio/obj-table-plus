@@ -1,7 +1,7 @@
 /*
  * @Author: chenkangxu
  * @Date: 2022-05-21 14:54:45
- * @LastEditTime: 2022-05-27 19:22:27
+ * @LastEditTime: 2022-05-30 16:42:23
  * @LastEditors: chenkangxu
  * @Description: 
  * @Github: 
@@ -59,6 +59,10 @@ const utils = {
     //驼峰转短横线
     _toKebab(value) {
         return value.replace(/([A-Z])/g, "-$1").toLowerCase();
+    },
+    //获取dom数据样式
+    getStyle(dom){
+        return dom.getBoundingClientRect();
     }
 }
 export default utils;

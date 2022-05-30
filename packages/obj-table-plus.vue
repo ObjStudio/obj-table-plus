@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-27 19:27:16
+ * @LastEditTime: 2022-05-30 16:55:38
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -50,10 +50,10 @@
     <!-- 工具栏 建议用toolbarProp和toolbarEvent来构建简单的操作按钮-->
     <template v-if="toolbarProp&&JSON.stringify(toolbarProp)!='{}'">
       <!-- 如果传的是空对象 就不显示工具栏;只有非空才显示工具栏 -->
-      <vxe-toolbar ref="xToolbar" v-bind="toolbarProp" v-on="toolbarEvent"></vxe-toolbar>
+      <vxe-toolbar ref="xToolbar" id="xToolbar" v-bind="toolbarProp" v-on="toolbarEvent"></vxe-toolbar>
     </template>
     <!-- 表格主体 -->
-    <div class="flex-1">
+    <div :style="{height:_tableHeight}">
       <vxe-table
         ref="vxeTable"
         class="vxeTable"
@@ -61,7 +61,6 @@
         :data="tableData"
         :loading="loading"
         v-bind="tableProp"
-        :tableHeight="tableHeight"
         v-on="tableEvent"
       >
         <child-table-plus 
@@ -73,6 +72,8 @@
     <!-- 分页 -->
     <template v-if="isPagination">
       <vxe-pager
+        id="xPager"
+        ref="xPager"
         v-bind="pagerStyle"
         @page-change="_handlePageChange"
         :current-page.sync="tablePage.currentPage"
@@ -161,7 +162,11 @@ export default {
       //当前渲染的列序号
       currentRenderColIndex:0,
       //缓存的uuid
-      cacheUid:[]
+      cacheUid:[],
+      //toolbar高度 工具栏高度
+      toolbarHeight:50,
+      //分页器高度
+      pagerHeight:44
     };
   },
   methods: {
@@ -229,6 +234,22 @@ export default {
         this.currentRenderColIndex++;
       })
       return newChildTableCols;
+    },
+    //获取工具栏和分页器高度
+    _getToolbarAndPagerHeight(){
+      this.$nextTick(()=>{
+        try {
+          this.toolbarHeight=utils.getStyle(document.getElementById("xToolbar")).height;
+        } catch (error) {
+          this.toolbarHeight=0;
+        }
+        try {
+          this.pagerHeight=utils.getStyle(document.getElementById("xPager")).height;
+        } catch (error) {
+          this.pagerHeight=0;
+        }
+        
+      })
     }
   },
   computed:{
@@ -276,6 +297,15 @@ export default {
 
       })
       return newTableCols;
+    },
+    //设定表格外容器高度
+    _tableHeight(){
+      if(this.tableHeight!=null){
+        return this.tableHeight;
+      }else{
+        return `calc(100% - ${this.toolbarHeight}px - ${this.pagerHeight}px)`
+      }
+
     }
   },
   created(){
@@ -310,11 +340,18 @@ export default {
       console.warn(e)
     }
     if(this.enableAutoQuery==true) this._queryData();
+    if(true) this._getToolbarAndPagerHeight();
   },
 };
 </script>
 
 <style scoped>
+.vxe-toolbar,.vxe-pager{
+  -moz-flex-shrink:0;
+  -ms-flex-shrink:0;
+  -webkit-flex-shrink:0;
+  flex-shrink:0;
+}
 .container{
   display: -webkit-box;
   display: -ms-flexbox;
