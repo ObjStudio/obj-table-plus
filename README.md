@@ -4,7 +4,10 @@
 从1.0.10版本起，tabelCols不再需要配置id，如果配置了也会被组件内部生成的id所替换
 从1.1.0版本起，tabelCols不再区分diy字段，将vxe原生的type与组件的type进行合并。
 # 一、快速上手
-
+# 0、通过npm安装
+```
+npm install obj-table-plus --save
+```
 # 1、引入组件并注册
 ```javascript
 import Vue from 'vue'
