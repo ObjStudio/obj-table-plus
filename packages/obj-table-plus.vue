@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-05-30 16:55:38
+ * @LastEditTime: 2022-06-01 10:21:08
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -27,7 +27,7 @@
       (2)slot insert 表格上插槽 一般用于插入一个表单来进行检索
 -->
 <template>
-  <div class="container">
+  <div class="objstudio-container">
     <div class="table-handle">
       <el-row class="operate" v-if="tableHandles.length > 0">
         <el-col :span="24">
@@ -352,7 +352,7 @@ export default {
   -webkit-flex-shrink:0;
   flex-shrink:0;
 }
-.container{
+.objstudio-container{
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
