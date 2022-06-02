@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-01 10:21:08
+ * @LastEditTime: 2022-06-02 19:50:13
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -25,10 +25,12 @@
   3、表格可选参数/插槽
       (1)tableHandles 基于elementUI的表格操作按钮
       (2)slot insert 表格上插槽 一般用于插入一个表单来进行检索
+      (3)slot tableTop 紧贴表格上方的插槽
+      (4)slot tableBottom 紧贴表格下方的插槽
 -->
 <template>
   <div class="objstudio-container">
-    <div class="table-handle">
+    <div class="table-handle" ref="tableHandles" id="tableHandles">
       <el-row class="operate" v-if="tableHandles.length > 0">
         <el-col :span="24">
           <el-button
@@ -50,8 +52,12 @@
     <!-- 工具栏 建议用toolbarProp和toolbarEvent来构建简单的操作按钮-->
     <template v-if="toolbarProp&&JSON.stringify(toolbarProp)!='{}'">
       <!-- 如果传的是空对象 就不显示工具栏;只有非空才显示工具栏 -->
-      <vxe-toolbar ref="xToolbar" id="xToolbar" v-bind="toolbarProp" v-on="toolbarEvent"></vxe-toolbar>
+      <vxe-toolbar ref="objstudio-xToolbar" id="objstudio-xToolbar" v-bind="toolbarProp" v-on="toolbarEvent"></vxe-toolbar>
     </template>
+    <!-- 插槽，介于工具栏和表格之间;即表格上方插槽 -->
+    <div ref="tableTop" id="tableTop" v-if="$slots.tableTop">
+      <slot name="tableTop"></slot>
+    </div>
     <!-- 表格主体 -->
     <div :style="{height:_tableHeight}">
       <vxe-table
@@ -68,6 +74,10 @@
           :key="item.id" :col="item" :size="size">
         </child-table-plus>
       </vxe-table>
+    </div>
+    <!-- 表格下方插槽 -->
+    <div ref="tableBottom" id="tableBottom" v-if="$slots.tableBottom">
+      <slot name="tableBottom"></slot>
     </div>
     <!-- 分页 -->
     <template v-if="isPagination">
@@ -166,7 +176,13 @@ export default {
       //toolbar高度 工具栏高度
       toolbarHeight:50,
       //分页器高度
-      pagerHeight:44
+      pagerHeight:44,
+      //表格操作按钮高度
+      tableHandlesHeight:0,
+      //tableTop高度
+      tableTopHeight:0,
+      //tableBottom高度
+      tableBottomHeight:0
     };
   },
   methods: {
@@ -188,6 +204,10 @@ export default {
         this.$emit("updateTableData", []);
       }
       this.loading=false;
+    },
+    //重新计算布局
+    doLayout(){
+      this._getToolbarAndPagerHeight();
     },
     //vxetable
     _handlePageChange(e){
@@ -235,21 +255,43 @@ export default {
       })
       return newChildTableCols;
     },
-    //获取工具栏和分页器高度
+    //获取工具栏和分页器高度+tableHandle+tableTop+tableBottom
     _getToolbarAndPagerHeight(){
       this.$nextTick(()=>{
         try {
-          this.toolbarHeight=utils.getStyle(document.getElementById("xToolbar")).height;
+          this.toolbarHeight=utils.getStyle(document.getElementById("objstudio-xToolbar")).height;
         } catch (error) {
           this.toolbarHeight=0;
         }
         try {
-          this.pagerHeight=utils.getStyle(document.getElementById("xPager")).height;
+          this.pagerHeight=utils.getStyle(document.querySelector("#xPager>.vxe-pager--wrapper")).height;
         } catch (error) {
           this.pagerHeight=0;
         }
+        try{
+          this.tableHandlesHeight=utils.getStyle(document.getElementById("tableHandles")).height;
+        }catch (error){
+          this.tableHandlesHeight=0;
+        }
+        try{
+          this.tableTopHeight=utils.getStyle(document.getElementById("tableTop")).height;
+        }catch(error){
+          this.tableTopHeight=0;
+        }
+        try{
+          this.tableBottomHeight=utils.getStyle(document.getElementById("tableBottom")).height;
+        }catch(error){
+          this.tableBottomHeight=0;
+        }
         
       })
+    },
+    //浏览器大小变化
+    _onResize(){
+      window.onresize=()=>{
+        // console.log("noResize");
+        this._getToolbarAndPagerHeight();
+      }
     }
   },
   computed:{
@@ -303,7 +345,7 @@ export default {
       if(this.tableHeight!=null){
         return this.tableHeight;
       }else{
-        return `calc(100% - ${this.toolbarHeight}px - ${this.pagerHeight}px)`
+        return `calc(100% - ${this.toolbarHeight}px - ${this.pagerHeight}px - ${this.tableBottomHeight}px - ${this.tableHandlesHeight}px - ${this.tableTopHeight}px )`
       }
 
     }
@@ -312,7 +354,7 @@ export default {
     this.$nextTick(() => {
       if(this.toolbarProp&&JSON.stringify(this.toolbarProp)!='{}'){
         // 手动将表格和工具栏进行关联
-        this.$refs.vxeTable.connect(this.$refs.xToolbar)
+        this.$refs.vxeTable.connect(this.$refs["objstudio-xToolbar"])
       }
     })
   },
@@ -341,7 +383,19 @@ export default {
     }
     if(this.enableAutoQuery==true) this._queryData();
     if(true) this._getToolbarAndPagerHeight();
+    if(true)  this._onResize();
   },
+  watch:{
+    //当插槽内的是异步的或者动态变化的时候
+    $slots:{
+      handler(newVal){
+        console.log(newVal);
+        this._getToolbarAndPagerHeight();
+      },
+      immediate:true,
+      deep:true
+    }
+  }
 };
 </script>
 
