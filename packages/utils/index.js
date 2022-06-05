@@ -1,7 +1,7 @@
 /*
  * @Author: chenkangxu
  * @Date: 2022-05-21 14:54:45
- * @LastEditTime: 2022-05-30 16:42:23
+ * @LastEditTime: 2022-06-03 13:17:34
  * @LastEditors: chenkangxu
  * @Description: 
  * @Github: 
@@ -63,6 +63,14 @@ const utils = {
     //获取dom数据样式
     getStyle(dom){
         return dom.getBoundingClientRect();
+    },
+    //组件警告
+    oTableWarn(text){
+        console.warn("【obj-table-plus警告】"+text);
+    },
+    //组件报错
+    oTableError(text){
+        console.error("【obj-table-plus错误】"+text);
     }
 }
 export default utils;

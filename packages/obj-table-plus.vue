@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-02 19:50:13
+ * @LastEditTime: 2022-06-05 13:57:07
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -64,7 +64,7 @@
         ref="vxeTable"
         class="vxeTable"
         resizable
-        :data="tableData"
+        :data="_tableData"
         :loading="loading"
         v-bind="tableProp"
         v-on="tableEvent"
@@ -157,6 +157,16 @@ export default {
     enableCacheUuid:{
       type:Boolean,
       default:utils.getConfig('enable-cache-uuid',false)
+    },
+    //功能模式，可选值default(默认表格分页模式)，grid(宫格卡片布局模式,需要传入colNumber)
+    mode:{
+      type:String,
+      default:utils.getConfig('mode','default')
+    },
+    //当mode=grid时需要传入colNumber,默认是4列
+    colNumber:{
+      type:Number,
+      default:utils.getConfig('col-number',4)
     }
   },
   data() {
@@ -324,20 +334,42 @@ export default {
      */
     //增加自生成id
     _tableCols(){
-      this.currentRenderColIndex=0;
-      // debugger;
       let newTableCols=[];
-      this.tableCols.forEach(col=>{
-        if(col.childTableCols&&col.childTableCols.length>0){
-          col.childTableCols=this._handleChildTableCols(col.childTableCols);
-        }
-        newTableCols.push({
-          ...col,
-          id:utils.getUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
-        })
-        this.currentRenderColIndex++;
+      this.currentRenderColIndex=0;
+      if(this.mode=='default'){
+        // debugger;
+        this.tableCols.forEach(col=>{
+          if(col.childTableCols&&col.childTableCols.length>0){
+            col.childTableCols=this._handleChildTableCols(col.childTableCols);
+          }
+          newTableCols.push({
+            ...col,
+            id:utils.getUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
+          })
+          this.currentRenderColIndex++;
 
-      })
+        })
+      }else if(this.mode=='grid'){
+        //grid宫格布局不支持多级表头，因为没有表头
+        //宫格布局就是组件内部自己处理生成tableCols和处理tableData;
+        //现在是内部处理生成tableCols,要求传入数组长度为1的宫格即可
+        if(this.tableCols.length!=1){
+          utils.oTableWarn("当前是grid模式,tableCols要求传入长度为1的数组,组件会以此为模板进行内部渲染。若长度大于1,将默认使用第一个作为模板。")
+        }else{
+          for(let i =1;i<=this.colNumber;i++){
+            newTableCols.push({
+              ...this.tableCols[0],
+              field:`col${i}`,
+              id:utils.getUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
+            })
+          }
+        }
+        
+
+      }else{
+        utils.oTableWarn("mode属性错误,无法正常渲染表格,请检查。")
+      }
+
       return newTableCols;
     },
     //设定表格外容器高度
@@ -348,6 +380,30 @@ export default {
         return `calc(100% - ${this.toolbarHeight}px - ${this.pagerHeight}px - ${this.tableBottomHeight}px - ${this.tableHandlesHeight}px - ${this.tableTopHeight}px )`
       }
 
+    },
+    //表格数据
+    _tableData(){
+      let newTableData=[]
+      if(this.mode=='default'){
+        newTableData=this.tableData;
+      }else if(this.mode=='grid'){
+        let tempObj={}
+        for(let i = 1;i<=this.tableData.length;i++){
+          //到达边界值，换行
+          if(i%this.colNumber==0){
+            tempObj[`col${this.colNumber}`]=this.tableData[i-1];
+            newTableData.push(tempObj);
+            tempObj={};
+          }else{
+            tempObj[`col${i%this.colNumber}`]=this.tableData[i-1];
+          }
+          //如果最后一行满不了了就直接添加了。
+          if(this.tableData.length==i && i%this.colNumber!=0){
+            newTableData.push(tempObj);
+          }
+        }
+      }
+      return newTableData;
     }
   },
   created(){

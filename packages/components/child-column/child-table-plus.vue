@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 19:20:30
- * @LastEditTime: 2022-05-23 12:35:46
+ * @LastEditTime: 2022-06-03 13:46:46
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table的子table
  * @Github: 
@@ -21,7 +21,7 @@
     </template>
     <template v-if="!col.childTableCols" slot-scope="scope">
       <!-- jsx 返回jsx数据-->
-      <render v-if="col.type === 'jsx'" :render="col.render&&col.render(scope)"></render>
+      <render v-if="col.type === 'jsx'" :render="col.render&&col.render(scope,col.field)"></render>
       <!-- 排序 -->
       <span v-if="col.type==='seq'">{{scope.$rowIndex+1}}</span>
       <!-- html -->
