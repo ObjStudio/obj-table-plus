@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-17 10:51:59
+ * @LastEditTime: 2022-06-17 14:30:50
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -52,7 +52,7 @@
     <!-- 工具栏 建议用toolbarProp和toolbarEvent来构建简单的操作按钮-->
     <template v-if="toolbarProp&&JSON.stringify(toolbarProp)!='{}'">
       <!-- 如果传的是空对象 就不显示工具栏;只有非空才显示工具栏 -->
-      <vxe-toolbar ref="objstudio-xToolbar" id="objstudio-xToolbar" v-bind="toolbarProp" v-on="toolbarEvent"></vxe-toolbar>
+      <vxe-toolbar ref="objstudio-xToolbar" id="objstudio-xToolbar" v-bind="_mergeProps('toolbar')" v-on="toolbarEvent"></vxe-toolbar>
     </template>
     <!-- 插槽，介于工具栏和表格之间;即表格上方插槽 -->
     <div ref="tableTop" id="tableTop" v-if="$slots.tableTop">
@@ -67,7 +67,7 @@
         resizable
         :data="_tableData"
         :loading="loading"
-        v-bind="tableProp"
+        v-bind="_mergeProps('table')"
         v-on="tableEvent"
       >
         <child-table-plus 
@@ -114,6 +114,15 @@ export default {
     tableHandles: { type: Array, default: () => [] },
     // 多个事件
     tableEvent: { type: Object, default: () => {} },
+    /***
+     * + 1.1.7 是否进行配置重写，默认不启用。
+     * 若启用，则是在全局配置文件的基础上进行合并（相同属性全局配置文件优先级更低）
+     * 若不启用，则是直接覆盖全局配置文件
+     * */
+    enableConfigOverwrite:{
+      type:Boolean,
+      default:utils.getConfig('enable-config-overwrite',false)
+    },
     // 多个属性值
     tableProp: {
       type: Object,
@@ -419,6 +428,34 @@ export default {
         }
       }
       return newTableData;
+    },
+    //合并属性 type: table|toolbar
+    _mergeProps(){
+      return (type)=>{
+        //不启用配置重写
+        if(this.enableConfigOverwrite===false){
+          let mergeProps={}
+          if(type=='table'){
+            mergeProps={
+              ...utils.getConfig('table-prop'),
+              ...this.tableProp
+            }
+          }else{
+            mergeProps={
+              ...utils.getConfig('toolbar-prop'),
+              ...this.toolbarProp
+            }
+          }
+          console.log("mergeProps",mergeProps);
+          return mergeProps;
+        }
+        //启用配置重写
+        else{
+          console.log("mergeProps",this.tableProp);
+          return this.tableProp;
+        }
+      }
+
     }
   },
   created(){
