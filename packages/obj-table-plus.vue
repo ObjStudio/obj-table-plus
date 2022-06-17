@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-17 14:30:50
+ * @LastEditTime: 2022-06-17 15:45:44
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -492,6 +492,13 @@ export default {
     if(this.enableAutoQuery==true) this._queryData();
     if(true) this._getToolbarAndPagerHeight();
     if(true)  this._onResize();
+    if(this.enableElementStyle==true){
+      this.$nextTick(()=>{
+        document.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner").innerHTML=`
+        <svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none" class="path"></circle></svg>
+        `
+      })
+    }
   },
   watch:{
     //当插槽内的是异步的或者动态变化的时候
@@ -530,6 +537,7 @@ export default {
   -webkit-flex: 1;
   flex: 1;  
 }
+/* ================element样式start================= */
 /* elementTable拉齐 */
 .element_style ::v-deep .vxe-checkbox--icon::before{
   border-width: 1px !important;
@@ -541,4 +549,58 @@ export default {
   border-color:#409EFF !important;
   transition: border-color 0.15s ease-in-out;
 }
+
+/* 重写loading */
+.element_style ::v-deep .vxe-loading{
+  background-color:rgba(255,255,255,.9) !important;
+  transition:opacity .3s !important; 
+}
+.element_style ::v-deep .vxe-loading .vxe-loading--spinner{
+  top: 50% !important;
+  margin-top: -21px !important;
+  width: 100% !important;
+  text-align: center !important;
+  position: absolute !important;
+}
+.element_style ::v-deep .vxe-loading--spinner .circular{
+    height: 42px !important;
+    width: 42px !important;
+    -webkit-animation: loading-rotate 2s linear infinite;
+    animation: loading-rotate 2s linear infinite;
+}
+.element_style ::v-deep .vxe-loading--spinner .circular .path{
+    -webkit-animation: loading-dash 1.5s ease-in-out infinite;
+    animation: loading-dash 1.5s ease-in-out infinite;
+    stroke-dasharray: 90,150;
+    stroke-dashoffset: 0;
+    stroke-width: 2;
+    stroke: #409EFF;
+    stroke-linecap: round;
+}
+.element_style ::v-deep .vxe-table--loading .vxe-loading--spinner::before,
+.element_style ::v-deep .vxe-table--loading .vxe-loading--spinner::after{
+  content:none !important;
+}
+@keyframes loading-dash{
+  0% {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90,150;
+    stroke-dashoffset: -40px;
+  }
+  100% {
+    stroke-dasharray: 90,150;
+    stroke-dashoffset: -120px;
+  }
+}
+@keyframes loading-rotate{
+ 100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  } 
+}
+/* ================element样式end================= */
+
 </style>
