@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-05 13:57:07
+ * @LastEditTime: 2022-06-17 10:51:59
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -63,6 +63,7 @@
       <vxe-table
         ref="vxeTable"
         class="vxeTable"
+        :class="[enableElementStyle?'element_style':'vxe_style']"
         resizable
         :data="_tableData"
         :loading="loading"
@@ -167,6 +168,11 @@ export default {
     colNumber:{
       type:Number,
       default:utils.getConfig('col-number',4)
+    },
+    //是否与elementUI样式对齐
+    enableElementStyle:{
+      type:Boolean,
+      default:utils.getConfig('enable-element-style',true)
     }
   },
   data() {
@@ -216,8 +222,17 @@ export default {
       this.loading=false;
     },
     //重新计算布局
-    doLayout(){
+    doLayout(reFull=true){
       this._getToolbarAndPagerHeight();
+      return this.$refs.vxeTable.recalculate(reFull);
+    },
+    //手动进行显示加载动画
+    startLoading(){
+      this.loading=true;
+    },
+    //手动关闭加载动画
+    endLoading(){
+      this.loading=false;
     },
     //vxetable
     _handlePageChange(e){
@@ -478,14 +493,14 @@ export default {
   -webkit-flex: 1;
   flex: 1;  
 }
-/* 默认样式与elementTable拉齐 */
-.vxeTable ::v-deep .vxe-checkbox--icon:before{
+/* elementTable拉齐 */
+.element_style ::v-deep .vxe-checkbox--icon::before{
   border-width: 1px !important;
   border-style: solid !important;
   border-color:#dcdfe6 !important;
   transition: border-color 0.15s ease-in-out;
 }
-.vxeTable ::v-deep .vxe-checkbox--icon:hover:before{
+.element_style ::v-deep .vxe-checkbox--icon:hover::before{
   border-color:#409EFF !important;
   transition: border-color 0.15s ease-in-out;
 }
