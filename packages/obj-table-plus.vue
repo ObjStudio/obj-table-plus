@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-18 10:25:24
+ * @LastEditTime: 2022-06-18 17:19:02
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -211,8 +211,14 @@ export default {
     };
   },
   methods: {
-    //刷新，重新请求数据
+    //刷新，重新请求数据，重置分页值
     reload(){
+      //重置到第一页
+      this.$set(this.tablePage,'currentPage',1);
+      this._queryData();
+    },
+    //刷新，不改变分页值
+    refresh(){
       this._queryData();
     },
     // 完成请求事件
@@ -446,12 +452,12 @@ export default {
               ...this.toolbarProp
             }
           }
-          console.log("mergeProps",mergeProps);
+          // console.log("mergeProps",mergeProps);
           return mergeProps;
         }
         //启用配置重写
         else{
-          console.log("mergeProps",this.tableProp);
+          // console.log("mergeProps",this.tableProp);
           return this.tableProp;
         }
       }
@@ -504,7 +510,7 @@ export default {
     //当插槽内的是异步的或者动态变化的时候
     $slots:{
       handler(newVal){
-        console.log(newVal);
+        // console.log(newVal);
         this._getToolbarAndPagerHeight();
       },
       immediate:true,
