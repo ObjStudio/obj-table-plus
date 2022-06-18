@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-18 17:19:02
+ * @LastEditTime: 2022-06-19 00:50:52
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -263,10 +263,10 @@ export default {
       this._queryData();
       this.$emit("handleCurrentChange", val);
     },
-    //改变页数
+    //改变页数，改变页数需要重置page
     _handleSizeChange(val) {
       this.tablePage.pageSize = val;
-      this._queryData();
+      this.reload();
       this.$emit("handleSizeChange", val);
     },
     // 请求
