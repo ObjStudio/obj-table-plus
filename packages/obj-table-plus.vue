@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-17 15:45:44
+ * @LastEditTime: 2022-06-18 10:25:24
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -539,36 +539,36 @@ export default {
 }
 /* ================element样式start================= */
 /* elementTable拉齐 */
-.element_style ::v-deep .vxe-checkbox--icon::before{
+.element_style /deep/ .vxe-checkbox--icon::before{
   border-width: 1px !important;
   border-style: solid !important;
   border-color:#dcdfe6 !important;
   transition: border-color 0.15s ease-in-out;
 }
-.element_style ::v-deep .vxe-checkbox--icon:hover::before{
+.element_style /deep/ .vxe-checkbox--icon:hover::before{
   border-color:#409EFF !important;
   transition: border-color 0.15s ease-in-out;
 }
 
 /* 重写loading */
-.element_style ::v-deep .vxe-loading{
+.element_style /deep/ .vxe-loading{
   background-color:rgba(255,255,255,.9) !important;
   transition:opacity .3s !important; 
 }
-.element_style ::v-deep .vxe-loading .vxe-loading--spinner{
+.element_style /deep/ .vxe-loading .vxe-loading--spinner{
   top: 50% !important;
   margin-top: -21px !important;
   width: 100% !important;
   text-align: center !important;
   position: absolute !important;
 }
-.element_style ::v-deep .vxe-loading--spinner .circular{
+.element_style /deep/ .vxe-loading--spinner .circular{
     height: 42px !important;
     width: 42px !important;
     -webkit-animation: loading-rotate 2s linear infinite;
     animation: loading-rotate 2s linear infinite;
 }
-.element_style ::v-deep .vxe-loading--spinner .circular .path{
+.element_style /deep/ .vxe-loading--spinner .circular .path{
     -webkit-animation: loading-dash 1.5s ease-in-out infinite;
     animation: loading-dash 1.5s ease-in-out infinite;
     stroke-dasharray: 90,150;
@@ -577,8 +577,8 @@ export default {
     stroke: #409EFF;
     stroke-linecap: round;
 }
-.element_style ::v-deep .vxe-table--loading .vxe-loading--spinner::before,
-.element_style ::v-deep .vxe-table--loading .vxe-loading--spinner::after{
+.element_style /deep/ .vxe-table--loading .vxe-loading--spinner::before,
+.element_style /deep/ .vxe-table--loading .vxe-loading--spinner::after{
   content:none !important;
 }
 @keyframes loading-dash{
