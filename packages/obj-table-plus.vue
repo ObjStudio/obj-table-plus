@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-06-19 00:50:52
+ * @LastEditTime: 2022-07-04 15:17:24
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -471,6 +471,9 @@ export default {
         this.$refs.vxeTable.connect(this.$refs["objstudio-xToolbar"])
       }
     })
+  },
+  activated(){
+    this.doLayout();
   },
   mounted() {
     try {
