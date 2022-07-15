@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-07-04 15:17:24
+ * @LastEditTime: 2022-07-15 16:59:56
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -182,6 +182,15 @@ export default {
     enableElementStyle:{
       type:Boolean,
       default:utils.getConfig('enable-element-style',true)
+    },
+    /**
+     * 完成时间，用于控制动画,
+     * 比如请求太快动画来不及展示，就限定个延时进行展示动画
+     * 单位：ms
+     */
+    completeTime:{
+      type:[Number],
+      default:0
     }
   },
   data() {
@@ -223,18 +232,36 @@ export default {
     },
     // 完成请求事件
     complete(data,total) {
-      //加载数据总数
-      this.tablePage.total=total;
-      if(data!==false){
-        if(data.length>=0){
-          this.$emit("updateTableData", data);
-        }else{
-          // this.$emit("updateTableData", data);
-        }
+      //用if判断的原因是当时间为0时，不再开启一个异步进程。保证一定是立即执行的
+      if(this.completeTime>0){
+        setTimeout(()=>{
+          //加载数据总数
+          this.tablePage.total=total;
+          if(data!==false){
+            if(data.length>=0){
+              this.$emit("updateTableData", data);
+            }else{
+              // this.$emit("updateTableData", data);
+            }
+          }else{
+            this.$emit("updateTableData", []);
+          }
+          this.loading=false;
+        },this.completeTime)
       }else{
-        this.$emit("updateTableData", []);
+        //加载数据总数
+        this.tablePage.total=total;
+        if(data!==false){
+          if(data.length>=0){
+            this.$emit("updateTableData", data);
+          }else{
+            // this.$emit("updateTableData", data);
+          }
+        }else{
+          this.$emit("updateTableData", []);
+        }
+        this.loading=false;
       }
-      this.loading=false;
     },
     //重新计算布局
     doLayout(reFull=true){
