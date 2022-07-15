@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-07-15 16:59:56
+ * @LastEditTime: 2022-07-15 22:52:47
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -29,7 +29,7 @@
       (4)slot tableBottom 紧贴表格下方的插槽
 -->
 <template>
-  <div class="objstudio-container">
+  <div class="objstudio-container" :style="{height:height==='auto'?'100%' :height}">
     <div class="table-handle" ref="tableHandles" id="tableHandles">
       <el-row class="operate" v-if="tableHandles.length > 0">
         <el-col :span="24">
@@ -63,7 +63,7 @@
       <vxe-table
         ref="vxeTable"
         class="vxeTable"
-        :class="[enableElementStyle?'element_style':'vxe_style']"
+        :class="[enableElementStyle?'element_style' :'vxe_style']"
         resizable
         :data="_tableData"
         :loading="loading"
@@ -178,7 +178,9 @@ export default {
       type:Number,
       default:utils.getConfig('col-number',4)
     },
-    //是否与elementUI样式对齐
+    /**
+     * 是否与elementUI样式对齐
+     */
     enableElementStyle:{
       type:Boolean,
       default:utils.getConfig('enable-element-style',true)
@@ -190,7 +192,15 @@ export default {
      */
     completeTime:{
       type:[Number],
-      default:0
+      default:utils.getConfig('complete-time',0)
+    },
+    /**
+     * 组件高度,这样就不用再在组件外加上style样式了。
+     * 高度就是高度；若设置为auto将会自动盛满其父组件
+     */
+    height:{
+      type:[String],
+      default:utils.getConfig('height',"auto")
     }
   },
   data() {
@@ -465,13 +475,20 @@ export default {
     //合并属性 type: table|toolbar
     _mergeProps(){
       return (type)=>{
-        //不启用配置重写
+        //不启用配置重写（默认）
+        /**
+         * 全局配置<私有配置
+         */
         if(this.enableConfigOverwrite===false){
           let mergeProps={}
           if(type=='table'){
             mergeProps={
               ...utils.getConfig('table-prop'),
               ...this.tableProp
+            }
+            //如果height=="auto"，就将tableProp的height替换为auto
+            if(this.height==="auto"){
+              mergeProps["height"]="auto";
             }
           }else{
             mergeProps={
@@ -483,6 +500,9 @@ export default {
           return mergeProps;
         }
         //启用配置重写
+        /**
+         * 全局配置>私有配置;全局配置直接将其私有配置覆盖
+         */
         else{
           // console.log("mergeProps",this.tableProp);
           return this.tableProp;
@@ -558,6 +578,7 @@ export default {
   flex-shrink:0;
 }
 .objstudio-container{
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
