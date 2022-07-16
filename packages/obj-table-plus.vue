@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-07-15 22:52:47
+ * @LastEditTime: 2022-07-16 10:50:19
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -29,7 +29,7 @@
       (4)slot tableBottom 紧贴表格下方的插槽
 -->
 <template>
-  <div class="objstudio-container" :style="{height:height==='auto'?'100%' :height}">
+  <div class="objstudio-container" :style="{height:height==='auto'?'100%' :height,width:_tableWidth}">
     <div class="table-handle" ref="tableHandles" id="tableHandles">
       <el-row class="operate" v-if="tableHandles.length > 0">
         <el-col :span="24">
@@ -59,7 +59,7 @@
       <slot name="tableTop"></slot>
     </div>
     <!-- 表格主体 -->
-    <div :style="{height:_tableHeight}">
+    <div :style="{height:_tableHeight,width:'100%'}">
       <vxe-table
         ref="vxeTable"
         class="vxeTable"
@@ -201,6 +201,13 @@ export default {
     height:{
       type:[String],
       default:utils.getConfig('height',"auto")
+    },
+    /**
+     * 组件宽度
+     */
+    width:{
+      type:[String],
+      default:utils.getConfig('width',"100%")
     }
   },
   data() {
@@ -448,6 +455,12 @@ export default {
       }
 
     },
+    /**
+     * 设定表格外容器宽度
+     */
+    _tableWidth(){
+      return this.width;
+    },
     //表格数据
     _tableData(){
       let newTableData=[]
@@ -593,6 +606,9 @@ export default {
   -ms-flex: 1;
   -webkit-flex: 1;
   flex: 1;  
+}
+#xPager{
+  height: auto !important;
 }
 /* ================element样式start================= */
 /* elementTable拉齐 */
