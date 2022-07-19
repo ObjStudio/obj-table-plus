@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-07-16 10:50:19
+ * @LastEditTime: 2022-07-19 15:17:07
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -499,10 +499,8 @@ export default {
               ...utils.getConfig('table-prop'),
               ...this.tableProp
             }
-            //如果height=="auto"，就将tableProp的height替换为auto
-            if(this.height==="auto"){
-              mergeProps["height"]="auto";
-            }
+            //表格本体的height永远是auto，高度由height属性定义
+            mergeProps["height"]="auto";
           }else{
             mergeProps={
               ...utils.getConfig('toolbar-prop'),
@@ -518,7 +516,10 @@ export default {
          */
         else{
           // console.log("mergeProps",this.tableProp);
-          return this.tableProp;
+          return {
+            ...this.tableProp,
+            height:"auto"
+          };
         }
       }
 
