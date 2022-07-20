@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-07-19 15:17:07
+ * @LastEditTime: 2022-07-20 15:34:36
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -497,10 +497,12 @@ export default {
           if(type=='table'){
             mergeProps={
               ...utils.getConfig('table-prop'),
+              height:"auto",
               ...this.tableProp
             }
+            //fix1.1.16 兼容性更新：若原项目使用了tableProp的height就应当优先
             //表格本体的height永远是auto，高度由height属性定义
-            mergeProps["height"]="auto";
+            // mergeProps["height"]="auto";
           }else{
             mergeProps={
               ...utils.getConfig('toolbar-prop'),
@@ -517,8 +519,8 @@ export default {
         else{
           // console.log("mergeProps",this.tableProp);
           return {
-            ...this.tableProp,
-            height:"auto"
+            height:"auto",
+            ...this.tableProp
           };
         }
       }
@@ -564,7 +566,8 @@ export default {
     if(true)  this._onResize();
     if(this.enableElementStyle==true){
       this.$nextTick(()=>{
-        document.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner").innerHTML=`
+        //这里应当使用$refs使用，以免出现影响别的组件的问题
+        this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner").innerHTML=`
         <svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none" class="path"></circle></svg>
         `
       })
