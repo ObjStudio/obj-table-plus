@@ -82,7 +82,7 @@
     </div>
     <!-- 分页 -->
     <template v-if="isPagination">
-      <vxe-pager
+      <obj-vxe-pager
         id="xPager"
         ref="xPager"
         v-bind="pagerStyle"
@@ -90,7 +90,7 @@
         :current-page.sync="tablePage.currentPage"
         :page-size.sync="tablePage.pageSize"
         :total="tablePage.total">
-      </vxe-pager>
+      </obj-vxe-pager>
     </template>
   </div>
 </template>
@@ -98,9 +98,10 @@
 <script>
 import utils from "./utils";
 import childTablePlus from "./components/child-column/child-table-plus.vue";
+import ObjVxePager from "./components/pager/index"
 export default {
   name:"obj-table-plus",
-  components: { childTablePlus },
+  components: { childTablePlus,ObjVxePager },
   model: {
     prop: "tableData",
     event: "updateTableData",
@@ -159,8 +160,7 @@ export default {
       type:Object,
       default:()=>
       utils.getConfig('pager-style',{
-        background:true,
-        layouts:['PrevJump', 'PrevPage', 'JumpNumber', 'NextPage', 'NextJump', 'Sizes', 'FullJump', 'Total']
+        layouts:['PrevPage', 'JumpNumber', 'NextPage', 'Sizes', 'FullJump', 'Total']
       })
     },
     //是否缓存uuid,对于列变化比较大的时候启用可以提升性能
@@ -208,6 +208,13 @@ export default {
     width:{
       type:[String],
       default:utils.getConfig('width',"100%")
+    },
+    /**
+     * + 1.2.0 是否启用分页点击拦截器,默认不启用，若启用，当监听页码事件变化时，必须调用next方法，否则不会进行下去。
+     */
+    enablePagerInterceptors:{
+      type:Boolean,
+      default:utils.getConfig('enable-pager-interceptors',false)
     }
   },
   data() {
@@ -294,24 +301,60 @@ export default {
       this.loading=false;
     },
     //vxetable
-    _handlePageChange(e){
+    _handlePageChange(e,e_next){
       if(e.type==='current'){
-        this._handleCurrentChange(e.currentPage)
+        this._handleCurrentChange(e.currentPage,e_next)
       }else if(e.type==='size'){
-        this._handleSizeChange(e.pageSize)
+        this._handleSizeChange(e.pageSize,e_next)
       }
     },
     // 改变页码
-    _handleCurrentChange(val) {
-      this.tablePage.currentPage = val;
-      this._queryData();
-      this.$emit("handleCurrentChange", val);
+    _handleCurrentChange(val,e_next) {
+      if(this.enablePagerInterceptors==false){
+        e_next();
+        this.tablePage.currentPage = val;
+        this._queryData();
+        this.$emit("handleCurrentChange", val);
+      }
+      //启用拦截器
+      else{
+        const next=()=>{
+          e_next();
+          this.tablePage.currentPage = val;
+          this._queryData();
+        }
+        //有监听要执行next方法
+        if(this.$listeners.handleCurrentChange){
+          this.$emit("handleCurrentChange", val , next);
+        }
+        //没监听就帮忙直接执行
+        else{
+          next();
+        }
+      }
     },
     //改变页数，改变页数需要重置page
-    _handleSizeChange(val) {
-      this.tablePage.pageSize = val;
-      this.reload();
-      this.$emit("handleSizeChange", val);
+    _handleSizeChange(val,e_next) {
+      if(this.enablePagerInterceptors==false){
+        e_next();
+        this.tablePage.pageSize = val;
+        this.reload();
+        this.$emit("handleSizeChange", val);
+      }else{
+        const next=()=>{
+          e_next();
+          this.tablePage.pageSize = val;
+          this.reload();
+        }
+        //有监听要执行next方法
+        if(this.$listeners.handleSizeChange){
+          this.$emit("handleSizeChange", val,next);
+        }
+        //没监听就帮忙直接执行
+        else{
+          next();
+        }
+      }
     },
     // 请求
     _queryData(){
@@ -343,27 +386,27 @@ export default {
     _getToolbarAndPagerHeight(){
       this.$nextTick(()=>{
         try {
-          this.toolbarHeight=utils.getStyle(document.getElementById("objstudio-xToolbar")).height;
+          this.toolbarHeight=utils.getStyle(this.$refs['objstudio-xToolbar'].$el).height;
         } catch (error) {
           this.toolbarHeight=0;
         }
         try {
-          this.pagerHeight=utils.getStyle(document.querySelector("#xPager>.vxe-pager--wrapper")).height;
+          this.pagerHeight=utils.getStyle(this.$refs['xPager'].$el).height;
         } catch (error) {
           this.pagerHeight=0;
         }
         try{
-          this.tableHandlesHeight=utils.getStyle(document.getElementById("tableHandles")).height;
+          this.tableHandlesHeight=utils.getStyle(this.$refs['tableHandles'].$el).height;
         }catch (error){
           this.tableHandlesHeight=0;
         }
         try{
-          this.tableTopHeight=utils.getStyle(document.getElementById("tableTop")).height;
+          this.tableTopHeight=utils.getStyle(this.$refs['tableHandles'].$el).height;
         }catch(error){
           this.tableTopHeight=0;
         }
         try{
-          this.tableBottomHeight=utils.getStyle(document.getElementById("tableBottom")).height;
+          this.tableBottomHeight=utils.getStyle(this.$refs['tableBottom'].$el).height;
         }catch(error){
           this.tableBottomHeight=0;
         }
@@ -613,6 +656,7 @@ export default {
 }
 #xPager{
   height: auto !important;
+  padding: 10px 0;
 }
 /* ================element样式start================= */
 /* elementTable拉齐 */
