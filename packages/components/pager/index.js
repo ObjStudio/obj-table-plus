@@ -78,7 +78,9 @@ export default {
             label: `${objI18n('vxe.pager.pagesize', [item])}`
           }
         }
-        return { value: '', label: '', ...item }
+        item.value='';
+        item.label='';
+        return item;
       })
     }
   },
