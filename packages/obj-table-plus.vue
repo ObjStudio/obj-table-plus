@@ -319,9 +319,10 @@ export default {
       //启用拦截器
       else{
         const next=()=>{
-          e_next();
+          const result=e_next();
           this.tablePage.currentPage = val;
           this._queryData();
+          return result;
         }
         //有监听要执行next方法
         if(this.$listeners.handleCurrentChange){
@@ -342,9 +343,10 @@ export default {
         this.$emit("handleSizeChange", val);
       }else{
         const next=()=>{
-          e_next();
+          const result=e_next();
           this.tablePage.pageSize = val;
           this.reload();
+          return result;
         }
         //有监听要执行next方法
         if(this.$listeners.handleSizeChange){

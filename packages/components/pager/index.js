@@ -1,13 +1,12 @@
-import XEUtils from 'xe-utils/ctor'
-//👇此部分是调用原项目中的配置
-import GlobalConfig from 'vxe-table/packages/conf'
-import { UtilTools } from 'vxe-table/packages/tools'
-import zhCN from 'vxe-table/packages/locale/lang/zh-CN'
+import XEUtils from '../../../node_modules/xe-utils'
+import GlobalConfig from '../../../node_modules/vxe-table/packages/v-x-e-table/src/conf'
+import vSize from '../../../node_modules/vxe-table/packages/mixins/size'
+import zhCN from '../../../node_modules/vxe-table/packages/locale/lang/zh-CN'
 const objI18n=XEUtils.toFormatString ? (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args) : (key, args) => XEUtils.template(XEUtils.get(zhCN, key), args, { tmplRE: /\{([.\w[\]\s]+)\}/g })
-//👆此部分是调用原项目中的配置
 
 export default {
   name: 'ObjVxePager',
+  mixins: [vSize],
   props: {
     size: { type: String, default: () => GlobalConfig.pager.size || GlobalConfig.size },
     // 自定义布局
@@ -35,6 +34,7 @@ export default {
     // 当只有一页时隐藏
     autoHidden: { type: Boolean, default: () => GlobalConfig.pager.autoHidden },
     transfer: { type: Boolean, default: () => GlobalConfig.pager.transfer },
+    className: [String, Function],
     // 自定义图标
     iconPrevPage: String,
     iconJumpPrev: String,
@@ -47,10 +47,12 @@ export default {
       default: null
     }
   },
+  data () {
+    return {
+      inpCurrPage: this.currentPage
+    }
+  },
   computed: {
-    vSize () {
-      return this.size || this.$parent.size || this.$parent.vSize
-    },
     isSizes () {
       return this.layouts.some(name => name === 'Sizes')
     },
@@ -80,16 +82,19 @@ export default {
       })
     }
   },
+  watch: {
+    currentPage (value) {
+      this.inpCurrPage = value
+    }
+  },
   render (h) {
-    const { $scopedSlots, $xegrid, vSize, align } = this
+    const { $scopedSlots, $xegrid, vSize, align, className } = this
     const childNodes = []
     if ($scopedSlots.left) {
       childNodes.push(
         h('span', {
           class: 'vxe-pager--left-wrapper'
-        }, [
-          $scopedSlots.left.call(this, { $grid: $xegrid })
-        ])
+        }, $scopedSlots.left.call(this, { $grid: $xegrid }))
       )
     }
     this.layouts.forEach(name => {
@@ -99,13 +104,11 @@ export default {
       childNodes.push(
         h('span', {
           class: 'vxe-pager--right-wrapper'
-        }, [
-          $scopedSlots.right.call(this, { $grid: $xegrid })
-        ])
+        }, $scopedSlots.right.call(this, { $grid: $xegrid }))
       )
     }
     return h('div', {
-      class: ['vxe-pager', {
+      class: ['vxe-pager', className ? (XEUtils.isFunction(className) ? className({ $pager: this }) : className) : '', {
         [`size--${vSize}`]: vSize,
         [`align--${align}`]: align,
         'is--border': this.border,
@@ -123,11 +126,12 @@ export default {
   methods: {
     // 上一页
     renderPrevPage (h) {
-      return h('span', {
+      return h('button', {
         class: ['vxe-pager--prev-btn', {
           'is--disabled': this.currentPage <= 1
         }],
         attrs: {
+          type: 'button',
           title: objI18n('vxe.pager.prevPage')
         },
         on: {
@@ -141,12 +145,13 @@ export default {
     },
     // 向上翻页
     renderPrevJump (h, tagName) {
-      return h(tagName || 'span', {
+      return h(tagName || 'button', {
         class: ['vxe-pager--jump-prev', {
           'is--fixed': !tagName,
           'is--disabled': this.currentPage <= 1
         }],
         attrs: {
+          type: 'button',
           title: objI18n('vxe.pager.prevJump')
         },
         on: {
@@ -163,24 +168,25 @@ export default {
     },
     // number
     renderNumber (h) {
-      return h('ul', {
+      return h('span', {
         class: 'vxe-pager--btn-wrapper'
       }, this.renderPageBtn(h))
     },
     // jumpNumber
     renderJumpNumber (h) {
-      return h('ul', {
+      return h('span', {
         class: 'vxe-pager--btn-wrapper'
       }, this.renderPageBtn(h, true))
     },
     // 向下翻页
     renderNextJump (h, tagName) {
-      return h(tagName || 'span', {
+      return h(tagName || 'button', {
         class: ['vxe-pager--jump-next', {
           'is--fixed': !tagName,
           'is--disabled': this.currentPage >= this.pageCount
         }],
         attrs: {
+          type: 'button',
           title: objI18n('vxe.pager.nextJump')
         },
         on: {
@@ -197,11 +203,12 @@ export default {
     },
     // 下一页
     renderNextPage (h) {
-      return h('span', {
+      return h('button', {
         class: ['vxe-pager--next-btn', {
           'is--disabled': this.currentPage >= this.pageCount
         }],
         attrs: {
+          type: 'button',
           title: objI18n('vxe.pager.nextPage')
         },
         on: {
@@ -245,13 +252,14 @@ export default {
         h('input', {
           class: 'vxe-pager--goto',
           domProps: {
-            value: this.currentPage
+            value: this.inpCurrPage
           },
           attrs: {
             type: 'text',
             autocomplete: 'off'
           },
           on: {
+            input: this.jumpInputEvent,
             keydown: this.jumpKeydownEvent,
             blur: this.triggerJumpEvent
           }
@@ -295,23 +303,29 @@ export default {
       }
       if (showJump && isLt) {
         nums.push(
-          h('li', {
+          h('button', {
             class: 'vxe-pager--num-btn',
+            attrs: {
+              type: 'button'
+            },
             on: {
               click: () => this.jumpPage(1)
             }
           }, 1),
-          this.renderPrevJump(h, 'li')
+          this.renderPrevJump(h, 'span')
         )
       }
       numList.forEach((item, index) => {
         const number = startNumber + index
         if (number <= pageCount) {
           nums.push(
-            h('li', {
+            h('button', {
               class: ['vxe-pager--num-btn', {
                 'is--active': currentPage === number
               }],
+              attrs: {
+                type: 'button'
+              },
               on: {
                 click: () => this.jumpPage(number)
               },
@@ -322,9 +336,12 @@ export default {
       })
       if (showJump && isGt) {
         nums.push(
-          this.renderNextJump(h, 'li'),
-          h('li', {
+          this.renderNextJump(h, 'button'),
+          h('button', {
             class: 'vxe-pager--num-btn',
+            attrs: {
+              type: 'button'
+            },
             on: {
               click: () => this.jumpPage(pageCount)
             }
@@ -363,6 +380,10 @@ export default {
         //此处做拦截器
         const next=()=>{
             this.$emit('update:currentPage', currentPage)
+            return {
+              after:currentPage,
+              before:this.currentPage
+            }
         }
         this.$emit('page-change', { type: 'current', pageSize: this.pageSize, currentPage, $event: { type: 'current' } },next)
         //无监听就不需要执行next方法
@@ -384,6 +405,10 @@ export default {
         //此处做拦截器
         const next=()=>{
             this.$emit('update:pageSize', pageSize)
+            return {
+              after:pageSize,
+              before:this.pageSize
+            }
         }
         this.$emit('page-change', { type: 'size', pageSize, currentPage: Math.min(this.currentPage, this.getPageCount(this.total, pageSize)), $event: { type: 'size' } },next)
         //无监听就不需要执行next方法
@@ -392,8 +417,12 @@ export default {
         }
       }
     },
+    jumpInputEvent (evnt) {
+      this.inpCurrPage = evnt.target.value
+    },
     jumpKeydownEvent (evnt) {
       if (evnt.keyCode === 13) {
+        return
         this.triggerJumpEvent(evnt)
       } else if (evnt.keyCode === 38) {
         evnt.preventDefault()
