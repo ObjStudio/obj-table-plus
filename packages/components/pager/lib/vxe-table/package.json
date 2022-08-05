@@ -1,0 +1,132 @@
+{
+  "_from": "vxe-table@^3.4.0",
+  "_id": "vxe-table@3.5.9",
+  "_inBundle": false,
+  "_integrity": "sha512-8idPnu377Ufwyv6/8GsAk2s9KNcF2nVdp3M8izMmrapOJ2fJRTWmaBTH//XbKqF4ELmvRPXAtkEOl6h37T7RaA==",
+  "_location": "/vxe-table",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "vxe-table@^3.4.0",
+    "name": "vxe-table",
+    "escapedName": "vxe-table",
+    "rawSpec": "^3.4.0",
+    "saveSpec": null,
+    "fetchSpec": "^3.4.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/vxe-table/-/vxe-table-3.5.9.tgz",
+  "_shasum": "b2fa902bef6cc4d2d4f02f0c2fa22aa90d891c3d",
+  "_spec": "vxe-table@^3.4.0",
+  "_where": "C:\\Users\\caifeng\\Desktop\\project\\obj-table-plus",
+  "author": {
+    "name": "Xu Liangzhan",
+    "email": "xu_liangzhan@163.com"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "bugs": {
+    "url": "https://github.com/x-extends/vxe-table/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "一个基于 vue 的 PC 端表格组件，支持增删改查、虚拟列表、虚拟树、懒加载、快捷菜单、数据校验、树形结构、打印导出、表单渲染、数据分页、弹窗、自定义模板、渲染器、贼灵活的配置项、扩展接口等...",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "@vue/cli-plugin-babel": "~4.4.0",
+    "@vue/cli-plugin-eslint": "~4.4.0",
+    "@vue/cli-plugin-router": "~4.4.0",
+    "@vue/cli-plugin-typescript": "~4.4.0",
+    "@vue/cli-plugin-vuex": "~4.4.0",
+    "@vue/cli-service": "~4.4.0",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "@vue/eslint-config-typescript": "^5.0.2",
+    "core-js": "^3.6.5",
+    "del": "^5.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-replace": "^1.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "sass": "^1.52.1",
+    "sass-loader": "^8.0.2",
+    "typescript": "~4.7.4",
+    "vue": "^2.6.14",
+    "vue-class-component": "^7.2.3",
+    "vue-i18n": "^8.18.1",
+    "vue-property-decorator": "^8.4.2",
+    "vue-router": "^3.2.0",
+    "vue-template-compiler": "^2.6.14",
+    "vuex": "^3.4.0",
+    "xe-ajax": "^4.0.5",
+    "xe-clipboard": "^1.10.1",
+    "xe-utils": "^3.5.4"
+  },
+  "files": [
+    "lib",
+    "types",
+    "packages",
+    "styles",
+    "helper",
+    "scripts"
+  ],
+  "homepage": "https://github.com/x-extends/vxe-table#readme",
+  "jsdelivr": "lib/index.umd.js",
+  "keywords": [
+    "vxe-table",
+    "vxe-grid",
+    "vue table",
+    "vue grid"
+  ],
+  "license": "MIT",
+  "main": "lib/index.common.js",
+  "name": "vxe-table",
+  "peerDependencies": {
+    "vue": "^2.6.0",
+    "xe-utils": "^3.5.0"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-extends/vxe-table.git"
+  },
+  "scripts": {
+    "build": "vue-cli-service build",
+    "format": "eslint --fix examples/**/*.{js,ts,vue}",
+    "lib": "npm run lib:pack && npm run lib:modules",
+    "lib:modules": "gulp build",
+    "lib:pack": "vue-cli-service build --target lib --name index --dest lib_temp index.js",
+    "lint": "vue-cli-service lint",
+    "serve": "vue-cli-service serve"
+  },
+  "style": "lib/style.css",
+  "typings": "types/index.d.ts",
+  "unpkg": "lib/index.umd.js",
+  "version": "3.5.9",
+  "vetur": {
+    "tags": "helper/vetur/tags.json",
+    "attributes": "helper/vetur/attributes.json"
+  }
+}

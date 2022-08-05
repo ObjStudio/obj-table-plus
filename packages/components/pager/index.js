@@ -1,7 +1,7 @@
-import XEUtils from '../../../node_modules/xe-utils'
-import GlobalConfig from '../../../node_modules/vxe-table/packages/v-x-e-table/src/conf'
-import vSize from '../../../node_modules/vxe-table/packages/mixins/size'
-import zhCN from '../../../node_modules/vxe-table/packages/locale/lang/zh-CN'
+import XEUtils from './lib/xe-utils'
+import GlobalConfig from './lib/vxe-table/packages/v-x-e-table/src/conf'
+import vSize from './lib/vxe-table/packages/mixins/size'
+import zhCN from './lib/vxe-table/packages/locale/lang/zh-CN'
 const objI18n=XEUtils.toFormatString ? (key, args) => XEUtils.toFormatString(XEUtils.get(zhCN, key), args) : (key, args) => XEUtils.template(XEUtils.get(zhCN, key), args, { tmplRE: /\{([.\w[\]\s]+)\}/g })
 
 export default {
