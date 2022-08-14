@@ -1,7 +1,7 @@
 <!--
  * @Author: chenkangxu
  * @Date: 2021-11-01 18:43:30
- * @LastEditTime: 2022-07-20 15:34:36
+ * @LastEditTime: 2022-08-14 12:46:33
  * @LastEditors: chenkangxu
  * @Description: 基于vxe-table v3.x 快速表格生成组件
  * @Github: https://xuliangzhan_admin.gitee.io/vxe-table
@@ -98,7 +98,7 @@
 <script>
 import utils from "./utils";
 import childTablePlus from "./components/child-column/child-table-plus.vue";
-import ObjVxePager from "./components/pager/index"
+import ObjVxePager from "./components/pager/index";
 export default {
   name:"obj-table-plus",
   components: { childTablePlus,ObjVxePager },
@@ -398,17 +398,17 @@ export default {
           this.pagerHeight=0;
         }
         try{
-          this.tableHandlesHeight=utils.getStyle(this.$refs['tableHandles'].$el).height;
+          this.tableHandlesHeight=utils.getStyle(this.$refs['tableHandles']).height;
         }catch (error){
           this.tableHandlesHeight=0;
         }
         try{
-          this.tableTopHeight=utils.getStyle(this.$refs['tableHandles'].$el).height;
+          this.tableTopHeight=utils.getStyle(this.$refs['tableTop']).height;
         }catch(error){
           this.tableTopHeight=0;
         }
         try{
-          this.tableBottomHeight=utils.getStyle(this.$refs['tableBottom'].$el).height;
+          this.tableBottomHeight=utils.getStyle(this.$refs['tableBottom']).height;
         }catch(error){
           this.tableBottomHeight=0;
         }
