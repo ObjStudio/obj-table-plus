@@ -59,8 +59,9 @@
       <slot name="tableTop"></slot>
     </div>
     <!-- 表格主体 -->
-    <div :style="{height:_tableHeight,width:'100%'}">
+    <div :style="{height:_tableHeight,width:'100%'}" :class="mode=='flex'?'flex-mode-class':''">
       <vxe-table
+        v-if="mode!='flex'"
         ref="vxeTable"
         class="vxeTable"
         :class="[enableElementStyle?'element_style' :'vxe_style']"
@@ -75,6 +76,11 @@
           :key="item.id" :col="item" :size="size">
         </child-table-plus>
       </vxe-table>
+      <template v-else>
+        <render 
+          v-for="(item,index) in _tableData" :key="index"
+          :render="_tableCols[0]&&_tableCols[0].render(item)"></render>
+      </template>
     </div>
     <!-- 表格下方插槽 -->
     <div ref="tableBottom" id="tableBottom" v-if="$slots.tableBottom">
@@ -99,9 +105,10 @@
 import utils from "./utils";
 import childTablePlus from "./components/child-column/child-table-plus.vue";
 import ObjVxePager from "./components/pager/index";
+import render from "./components/render";
 export default {
   name:"obj-table-plus",
-  components: { childTablePlus,ObjVxePager },
+  components: { childTablePlus,ObjVxePager,render },
   model: {
     prop: "tableData",
     event: "updateTableData",
@@ -168,7 +175,7 @@ export default {
       type:Boolean,
       default:utils.getConfig('enable-cache-uuid',false)
     },
-    //功能模式，可选值default(默认表格分页模式)，grid(宫格卡片布局模式,需要传入colNumber)
+    //功能模式，可选值default(默认表格分页模式)，grid(宫格卡片布局模式,需要传入colNumber)，flex(弹性卡片布局,因为flex的特性，不再需要传入colNumber，且不再依赖vxe-table)
     mode:{
       type:String,
       default:utils.getConfig('mode','default')
@@ -216,6 +223,9 @@ export default {
       type:Boolean,
       default:utils.getConfig('enable-pager-interceptors',false)
     }
+  },
+  update(){
+    console.log("组件触发更新！！！！！");
   },
   data() {
     return {
@@ -290,7 +300,11 @@ export default {
     //重新计算布局
     doLayout(reFull=true){
       this._getToolbarAndPagerHeight();
-      return this.$refs.vxeTable.recalculate(reFull);
+      if(this.$refs.vxeTable){
+        return this.$refs.vxeTable.recalculate(reFull);
+      }else{
+        return false;
+      }
     },
     //手动进行显示加载动画
     startLoading(){
@@ -455,7 +469,7 @@ export default {
     _tableCols(){
       let newTableCols=[];
       this.currentRenderColIndex=0;
-      if(this.mode=='default'){
+      if(this.mode=='default' || this.mode=='flex'){
         // debugger;
         this.tableCols.forEach(col=>{
           if(col.childTableCols&&col.childTableCols.length>0){
@@ -509,7 +523,7 @@ export default {
     //表格数据
     _tableData(){
       let newTableData=[]
-      if(this.mode=='default'){
+      if(this.mode=='default' || this.mode=='flex'){
         newTableData=this.tableData;
       }else if(this.mode=='grid'){
         let tempObj={}
@@ -574,7 +588,7 @@ export default {
   },
   created(){
     this.$nextTick(() => {
-      if(this.toolbarProp&&JSON.stringify(this.toolbarProp)!='{}'){
+      if(this.$refs.vxeTable&&this.toolbarProp&&JSON.stringify(this.toolbarProp)!='{}'){
         // 手动将表格和工具栏进行关联
         this.$refs.vxeTable.connect(this.$refs["objstudio-xToolbar"])
       }
@@ -611,10 +625,12 @@ export default {
     if(true)  this._onResize();
     if(this.enableElementStyle==true){
       this.$nextTick(()=>{
-        //这里应当使用$refs使用，以免出现影响别的组件的问题
-        this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner").innerHTML=`
-        <svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none" class="path"></circle></svg>
-        `
+        if(this.$refs.vxeTable){
+          //这里应当使用$refs使用，以免出现影响别的组件的问题
+          this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner").innerHTML=`
+          <svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none" class="path"></circle></svg>
+          `
+        }
       })
     }
   },
@@ -659,6 +675,12 @@ export default {
 #xPager{
   height: auto !important;
   padding: 10px 0;
+}
+.flex-mode-class{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  overflow-y:scroll;
 }
 /* ================element样式start================= */
 /* elementTable拉齐 */
