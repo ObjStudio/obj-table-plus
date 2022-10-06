@@ -59,7 +59,9 @@
       <slot name="tableTop"></slot>
     </div>
     <!-- 表格主体 -->
-    <div :style="{height:_tableHeight,width:'100%'}" :class="mode=='flex'?'flex-mode-class':''">
+    <div :style="{height:_tableHeight,width:'100%'}" 
+    v-loading="mode=='flex'&&loading"
+    :class="mode=='flex'?'flex-mode-class':''">
       <vxe-table
         v-if="mode!='flex'"
         ref="vxeTable"
@@ -80,6 +82,9 @@
         <render 
           v-for="(item,index) in _tableData" :key="index"
           :render="_tableCols[0]&&_tableCols[0].render(item)"></render>
+        <div class="flex-empty" :style="{height:_tableHeight,width:'100%'}" v-if="_tableData.length<=0" >
+          <span>暂无数据</span>
+        </div>
       </template>
     </div>
     <!-- 表格下方插槽 -->
@@ -681,6 +686,14 @@ export default {
   flex-wrap: wrap;
   flex-direction: row;
   overflow-y:scroll;
+}
+.flex-empty{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-empty span{
+  color: #666;
 }
 /* ================element样式start================= */
 /* elementTable拉齐 */
