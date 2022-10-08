@@ -81,7 +81,7 @@
       <template v-else>
         <render 
           v-for="(item,index) in _tableData" :key="index"
-          :render="_tableCols[0]&&_tableCols[0].render(item)"></render>
+          :render="_tableCols[0]&&_tableCols[0].render(item,index)"></render>
         <div class="flex-empty" :style="{height:_tableHeight,width:'100%'}" v-if="_tableData.length<=0" >
           <span>暂无数据</span>
         </div>
