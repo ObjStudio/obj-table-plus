@@ -1,6 +1,6 @@
 {
   "name": "obj-table-plus",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "基于vxe-table3.x的快速构建表格组件，支持jsx+render函数自定义渲染",
   "main": "index.js",
   "scripts": {
