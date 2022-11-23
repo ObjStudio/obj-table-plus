@@ -630,7 +630,7 @@ export default {
     if(true)  this._onResize();
     if(this.enableElementStyle==true){
       this.$nextTick(()=>{
-        if(this.$refs.vxeTable){
+        if(this.$refs.vxeTable&&this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner")){
           //这里应当使用$refs使用，以免出现影响别的组件的问题
           this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner").innerHTML=`
           <svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none" class="path"></circle></svg>
