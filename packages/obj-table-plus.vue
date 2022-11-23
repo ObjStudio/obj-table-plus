@@ -603,28 +603,30 @@ export default {
     this.doLayout();
   },
   mounted() {
-    try {
-      // 遍历所有的事件名称
-      Object.keys(this.tableEvent).forEach((event) => {
-        // 监听事件触发
-        this.$on(event, (e) => {
-          // 发送事件到父组件
-          this.$emit(event, e);
-        });
-      });
-    } catch (e) {
-      console.warn(e);
-    }
+    // ============= 此段代码貌似没有任何作用 START ==============
+    // try {
+    //   // 遍历所有的事件名称
+    //   Object.keys(this.tableEvent).forEach((event) => {
+    //     // 监听事件触发
+    //     this.$on(event, (e) => {
+    //       // 发送事件到父组件
+    //       this.$emit(event, e);
+    //     });
+    //   });
+    // } catch (e) {
+    //   console.warn(e);
+    // }
 
-    try{
-      Object.keys(this.toolbarEvent).forEach((event)=>{
-        this.$on(event,(e)=>{
-          this.$emit(event,e);
-        })
-      })
-    }catch(e){
-      console.warn(e)
-    }
+    // try{
+    //   Object.keys(this.toolbarEvent).forEach((event)=>{
+    //     this.$on(event,(e)=>{
+    //       this.$emit(event,e);
+    //     })
+    //   })
+    // }catch(e){
+    //   console.warn(e)
+    // }
+    // ============= 此段代码貌似没有任何作用 END ==============
     if(this.enableAutoQuery==true) this._queryData();
     if(true) this._getToolbarAndPagerHeight();
     if(true)  this._onResize();
