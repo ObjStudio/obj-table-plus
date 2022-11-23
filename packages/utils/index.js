@@ -26,8 +26,8 @@ try{
 }
 
 const utils = {
-    //获取唯一id
-    getUid(currentRenderColIndex,enableCacheUuid,cacheUid/*缓存的uuid*/){
+    //获取列的唯一id
+    getColumnUid(currentRenderColIndex,enableCacheUuid,cacheUid/*缓存的uuid*/){
         if(enableCacheUuid==true){
             let uid=null;
             if(cacheUid.length>0){
@@ -46,6 +46,9 @@ const utils = {
             return uuidv4();
         }
 
+    },
+    getUid(){
+        return uuidv4();
     },
     //读取配置项信息
     getConfig(key,defaultValue){

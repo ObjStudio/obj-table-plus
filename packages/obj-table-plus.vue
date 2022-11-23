@@ -397,7 +397,7 @@ export default {
         }
         newChildTableCols.push({
           ...col,
-          id:utils.getUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
+          id:utils.getColumnUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
         })
         this.currentRenderColIndex++;
       })
@@ -454,7 +454,7 @@ export default {
      *  如第一次渲染生成了8个uuid，当列发生变化时，这8个uuid可以复用，只需要再生成一个uuid即可
      * 
      * let cacheUid=[]
-     * const getUid=(index)=>{
+     * const getColumnUid=(index)=>{
      *  let uid=null;
      *  if(cacheUid.length>0){
      *    if(index>cacheUid.length){
@@ -482,7 +482,7 @@ export default {
           }
           newTableCols.push({
             ...col,
-            id:utils.getUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
+            id:utils.getColumnUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
           })
           this.currentRenderColIndex++;
 
@@ -498,7 +498,7 @@ export default {
             newTableCols.push({
               ...this.tableCols[0],
               field:`col${i}`,
-              id:utils.getUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
+              id:utils.getColumnUid(this.currentRenderColIndex,this.enableCacheUuid,this.cacheUid)
             })
           }
         }
