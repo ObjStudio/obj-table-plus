@@ -632,9 +632,9 @@ export default {
     if(true)  this._onResize();
     if(this.enableElementStyle==true){
       this.$nextTick(()=>{
-        if(this.$refs.vxeTable&&this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner")){
+        if(this.$refs.vxeTable&&this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--chunk")){
           //这里应当使用$refs使用，以免出现影响别的组件的问题
-          this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--spinner").innerHTML=`
+          this.$refs.vxeTable.$el.querySelector(".vxe-table--loading.vxe-loading .vxe-loading--chunk").innerHTML=`
           <svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none" class="path"></circle></svg>
           `
         }
@@ -700,7 +700,7 @@ export default {
 }
 /* ================element样式start================= */
 /* elementTable拉齐 */
-.element_style /deep/ .vxe-checkbox--icon::before{
+/* .element_style /deep/ .vxe-checkbox--icon::before{
   border-width: 1px !important;
   border-style: solid !important;
   border-color:#dcdfe6 !important;
@@ -709,27 +709,27 @@ export default {
 .element_style /deep/ .vxe-checkbox--icon:hover::before{
   border-color:#409EFF !important;
   transition: border-color 0.15s ease-in-out;
-}
+} */
 
 /* 重写loading */
 .element_style /deep/ .vxe-loading{
   background-color:rgba(255,255,255,.9) !important;
   transition:opacity .3s !important; 
 }
-.element_style /deep/ .vxe-loading .vxe-loading--spinner{
+.element_style /deep/ .vxe-loading .vxe-loading--chunk{
   top: 50% !important;
   margin-top: -21px !important;
   width: 100% !important;
   text-align: center !important;
   position: absolute !important;
 }
-.element_style /deep/ .vxe-loading--spinner .circular{
+.element_style /deep/ .vxe-loading--chunk .circular{
     height: 42px !important;
     width: 42px !important;
     -webkit-animation: loading-rotate 2s linear infinite;
     animation: loading-rotate 2s linear infinite;
 }
-.element_style /deep/ .vxe-loading--spinner .circular .path{
+.element_style /deep/ .vxe-loading--chunk .circular .path{
     -webkit-animation: loading-dash 1.5s ease-in-out infinite;
     animation: loading-dash 1.5s ease-in-out infinite;
     stroke-dasharray: 90,150;
@@ -738,8 +738,8 @@ export default {
     stroke: #409EFF;
     stroke-linecap: round;
 }
-.element_style /deep/ .vxe-table--loading .vxe-loading--spinner::before,
-.element_style /deep/ .vxe-table--loading .vxe-loading--spinner::after{
+.element_style /deep/ .vxe-table--loading .vxe-loading--chunk::before,
+.element_style /deep/ .vxe-table--loading .vxe-loading--chunk::after{
   content:none !important;
 }
 @keyframes loading-dash{
