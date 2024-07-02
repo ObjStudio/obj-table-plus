@@ -18,6 +18,15 @@ import ObjRender from './packages/components/render/index.vue'
 export default {
     install: function (Vue) {
         Vue.component('ObjTablePlus', objTablePlus);
-        Vue.component('obj-render',ObjRender);
+        Vue.component('obj-render', ObjRender);
+        //事件总线暴露组件方法到全局下
+        Vue.directive('objExpose', {
+            bind(el, binding, vNode) {
+                const methodName = binding.arg;
+                if (vNode.context && methodName) {
+                    Vue.prototype[`$${methodName}`] = vNode.context[methodName].bind(vNode.context);
+                }
+            }
+        });
     }
 }
