@@ -30,7 +30,6 @@
 -->
 <template>
   <div
-    v-objExpose:objInvoke
     class="objstudio-container"
     :style="{ height: height === 'auto' ? '100%' : height, width: _tableWidth }"
   >
@@ -257,6 +256,32 @@ export default {
       type: Boolean,
       default: utils.getConfig("enable-pager-interceptors", false),
     },
+    /**
+     * + 2.2.0 是否启用事件总线，默认关闭，若启用，则会在组件内部创建一个事件总线，并且必须在main.js下创建
+     * 一个总线实例Vue.prototype.$objEventBus=new Vue();注意千万不要进行误挂载，该实例只为了实现总线通信。
+     * 可以通过$emit("obj-event-bus",(functionName,functionParams,callback(result)))
+     * 来触发事件来全局调用组件内部方法。
+     */
+    enableGlobalEventBus: {
+      type: Boolean,
+      default: utils.getConfig("enable-global-event-bus", false),
+    },
+    /**
+     * + 2.2.0 开放属性参数，是否根据浏览器大小变化而实时重新计算绘制表格大小。默认为开启，假如浏览器大小一般不会改变，
+     * 且对性能要求比较高，可以选择将其关闭
+     */
+    enableAutoResize:{
+      type:Boolean,
+      default:utils.getConfig("enable-auto-resize",true)
+    },
+    /**
+     * + 2.2.0 开放属性参数，是否当初始化时进行计算窗口大小，默认时计算，且必须计算否则会出现表格高度异常
+     * 如果性能要求非常高可以将初次计算关闭。也就是从不计算。
+     */
+    enableResizeWhenInit:{
+      type:Boolean,
+      default:utils.getConfig("enable-resize-when-init",true)
+    }
   },
   update() {
     console.log("组件触发更新！！！！！");
@@ -678,10 +703,10 @@ export default {
     //   console.warn(e)
     // }
     // ============= 此段代码貌似没有任何作用 END ==============
-    if (this.enableAutoQuery == true) this._queryData();
-    if (true) this._getToolbarAndPagerHeight();
-    if (true) this._onResize();
-    if (this.enableElementStyle == true) {
+    if (this.enableAutoQuery === true) this._queryData();
+    if (this.enableResizeWhenInit === true) this._getToolbarAndPagerHeight();
+    if (this.enableAutoResize === true) this._onResize();
+    if (this.enableElementStyle === true) {
       this.$nextTick(() => {
         if (
           this.$refs.vxeTable &&
@@ -697,6 +722,21 @@ export default {
           `;
         }
       });
+    }
+    if (this.enableGlobalEventBus) {
+      if (this.$objEventBus) {
+        this.$objEventBus.$on(
+          "obj-event-bus",
+          (functionName, functionParams, callback) => {
+            console.log(functionName);
+            callback(this.objInvoke(functionName, functionParams));
+          }
+        );
+      } else {
+        utils.oTableError(
+          "使用事件总线，必须在main.js下注册Vue.prototype.$objEventBus=new Vue();"
+        );
+      }
     }
   },
   watch: {
