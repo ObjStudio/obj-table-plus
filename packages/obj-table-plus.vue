@@ -547,15 +547,21 @@ export default {
           if (col.childTableCols && col.childTableCols.length > 0) {
             col.childTableCols = this._handleChildTableCols(col.childTableCols);
           }
-          newTableCols.push({
-            ...col,
-            id: utils.getColumnUid(
-              this.currentRenderColIndex,
-              this.enableCacheUuid,
-              this.cacheUid
-            ),
-          });
-          this.currentRenderColIndex++;
+          /**
+           * + 2.2.1 tableCols的show属性可以直接控制列显示，再也不需要手动维护tableCols了。
+           * 默认可以不写show，如果要让它消失就写show:false即可。
+           */
+          if (!(col.show == false)) {
+            newTableCols.push({
+              ...col,
+              id: utils.getColumnUid(
+                this.currentRenderColIndex,
+                this.enableCacheUuid,
+                this.cacheUid
+              ),
+            });
+            this.currentRenderColIndex++;
+          }
         });
       } else if (this.mode == "grid") {
         //grid宫格布局不支持多级表头，因为没有表头
