@@ -90,6 +90,10 @@
           :size="size"
         >
         </child-table-plus>
+        <!-- 动态插槽 -->
+        <template v-for="slotName in Object.keys($slots)" #[slotName]>
+          <slot :name="slotName"></slot>
+        </template>
       </vxe-table>
       <template v-else>
         <render
@@ -270,18 +274,18 @@ export default {
      * + 2.2.0 开放属性参数，是否根据浏览器大小变化而实时重新计算绘制表格大小。默认为开启，假如浏览器大小一般不会改变，
      * 且对性能要求比较高，可以选择将其关闭
      */
-    enableAutoResize:{
-      type:Boolean,
-      default:utils.getConfig("enable-auto-resize",true)
+    enableAutoResize: {
+      type: Boolean,
+      default: utils.getConfig("enable-auto-resize", true),
     },
     /**
      * + 2.2.0 开放属性参数，是否当初始化时进行计算窗口大小，默认时计算，且必须计算否则会出现表格高度异常
      * 如果性能要求非常高可以将初次计算关闭。也就是从不计算。
      */
-    enableResizeWhenInit:{
-      type:Boolean,
-      default:utils.getConfig("enable-resize-when-init",true)
-    }
+    enableResizeWhenInit: {
+      type: Boolean,
+      default: utils.getConfig("enable-resize-when-init", true),
+    },
   },
   update() {
     console.log("组件触发更新！！！！！");
