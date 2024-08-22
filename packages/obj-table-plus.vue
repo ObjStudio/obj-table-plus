@@ -106,7 +106,9 @@
           :style="{ height: _tableHeight, width: '100%' }"
           v-if="_tableData.length <= 0"
         >
-          <span>暂无数据</span>
+          <slot name="flexEmpty">
+            <span>暂无数据</span>
+          </slot>
         </div>
       </template>
     </div>
