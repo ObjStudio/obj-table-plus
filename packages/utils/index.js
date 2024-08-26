@@ -1,11 +1,3 @@
-/*
- * @Author: chenkangxu
- * @Date: 2022-05-21 14:54:45
- * @LastEditTime: 2022-06-03 13:17:34
- * @LastEditors: chenkangxu
- * @Description: 
- * @Github: 
- */
 import { v4 as uuidv4 } from 'uuid';
 
 

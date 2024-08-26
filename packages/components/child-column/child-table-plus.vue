@@ -1,11 +1,3 @@
-<!--
- * @Author: chenkangxu
- * @Date: 2021-11-01 19:20:30
- * @LastEditTime: 2022-06-03 13:46:46
- * @LastEditors: chenkangxu
- * @Description: 基于vxe-table的子table
- * @Github: 
--->
 <template>
   <component
     :is="commonColumn(col.childTableCols && Array.isArray(col.childTableCols))"
