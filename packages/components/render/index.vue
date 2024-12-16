@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "custom-render",
+  name: "render",
   props: {
     //渲染函数
     render:{

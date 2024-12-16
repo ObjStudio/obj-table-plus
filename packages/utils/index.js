@@ -2,20 +2,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 //读取全局配置文件,约定在src目录下的config目录中创建obj-table.config.js文件
-let config=null;
-try{
-    const contextKey=require.context('/src/config',false,/\obj-table.config$/).keys();
-    console.log(contextKey);
-    //有找到文件
-    if(contextKey.length>0){
-        const suffix='.js';
-        config=require('/src/config/obj-table.config'+suffix);
-        console.log(config);
-    }
-}catch(e){
-    // console.log(e);
-    console.warn('没有读取到配置文件');
-}
+let config={};
+// try{
+//     const contextKey=require.context('/src/config',false,/\obj-table.config$/).keys();
+//     console.log(contextKey);
+//     //有找到文件
+//     if(contextKey.length>0){
+//         const suffix='.js';
+//         config=require('/src/config/obj-table.config'+suffix);
+//         console.log(config);
+//     }
+// }catch(e){
+//     // console.log(e);
+//     console.warn('没有读取到配置文件');
+// }
 
 const utils = {
     //获取列的唯一id

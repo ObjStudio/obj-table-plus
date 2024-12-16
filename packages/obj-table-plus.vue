@@ -135,8 +135,8 @@
 <script>
 import utils from "./utils";
 import childTablePlus from "./components/child-column/child-table-plus.vue";
-import ObjVxePager from "./components/pager/index";
-import render from "./components/render";
+import ObjVxePager from "./components/pager/index.js";
+import render from "./components/render/index.vue";
 export default {
   name: "obj-table-plus",
   components: { childTablePlus, ObjVxePager, render },
@@ -460,12 +460,7 @@ export default {
           col.childTableCols = this._handleChildTableCols(col.childTableCols);
         }
         newChildTableCols.push({
-          ...col,
-          id: utils.getColumnUid(
-            this.currentRenderColIndex,
-            this.enableCacheUuid,
-            this.cacheUid
-          ),
+          ...col
         });
         this.currentRenderColIndex++;
       });
@@ -560,11 +555,6 @@ export default {
           if (!(col.show == false)) {
             newTableCols.push({
               ...col,
-              id: utils.getColumnUid(
-                this.currentRenderColIndex,
-                this.enableCacheUuid,
-                this.cacheUid
-              ),
             });
             this.currentRenderColIndex++;
           }
@@ -582,11 +572,6 @@ export default {
             newTableCols.push({
               ...this.tableCols[0],
               field: `col${i}`,
-              id: utils.getColumnUid(
-                this.currentRenderColIndex,
-                this.enableCacheUuid,
-                this.cacheUid
-              ),
             });
           }
         }
