@@ -83,13 +83,18 @@
         v-bind="_mergeProps('table')"
         v-on="tableEvent"
       >
-        <child-table-plus
-          v-for="item in _tableCols"
-          :key="item.id"
-          :col="item"
-          :size="size"
-        >
-        </child-table-plus>
+        <template v-if="item.type !== 'jsx-out'">
+          <child-table-plus
+            v-for="item in _tableCols"
+            :key="item.id"
+            :col="item"
+            :size="size"
+          >
+          </child-table-plus>
+        </template>
+        <!-- jsx-out -->
+        <render v-else :render="item.render && item.render(item)"></render>
+
         <!-- 动态插槽 -->
         <template v-for="slotName in Object.keys($slots)" #[slotName]>
           <slot :name="slotName"></slot>

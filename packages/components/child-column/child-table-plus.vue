@@ -21,16 +21,30 @@
     </template>
     <template v-if="!col.childTableCols" slot-scope="scope">
       <!-- jsx 返回jsx数据-->
-      <render v-if="col.type === 'jsx'" :render="col.render&&col.render(scope,col.field)"></render>
+      <render
+        v-if="col.type === 'jsx'"
+        :render="col.render && col.render(scope, col.field)"
+      ></render>
       <!-- 排序 -->
-      <span v-if="col.type==='seq'">{{scope.$rowIndex+1}}</span>
+      <span v-if="col.type === 'seq'">{{ scope.$rowIndex + 1 }}</span>
       <!-- html -->
-      <span v-if="col.type === 'html'" v-html="col.html&&(typeof col.html==='function')?col.html(scope.row):scope.row[col.field]"></span>
+      <span
+        v-if="col.type === 'html'"
+        v-html="
+          col.html && typeof col.html === 'function'
+            ? col.html(scope.row)
+            : scope.row[col.field]
+        "
+      ></span>
       <!-- 按钮 -->
       <span v-if="col.type === 'button'">
         <el-button
-          v-for="btn in (typeof col.btnList === 'function'?col.btnList(scope.row):col.btnList)"
-          :key="(typeof btn.label).toLowerCase() == 'string' ? btn.label : btn.auth"
+          v-for="btn in typeof col.btnList === 'function'
+            ? col.btnList(scope.row)
+            : col.btnList"
+          :key="
+            (typeof btn.label).toLowerCase() == 'string' ? btn.label : btn.auth
+          "
           :disabled="btn.disabled && btn.disabled(scope.row)"
           :type="btn.type"
           :size="btn.size || col.size"
@@ -39,7 +53,11 @@
           :round="btn.round"
           :circle="btn.circle"
           @click.stop="btn.handle && btn.handle(scope.row, scope.$index)"
-          >{{(typeof btn.label).toLowerCase() == "string"? btn.label:btn.label(scope.row)}}
+          >{{
+            (typeof btn.label).toLowerCase() == "string"
+              ? btn.label
+              : btn.label(scope.row)
+          }}
         </el-button>
       </span>
       <!-- 输入框 -->
@@ -202,7 +220,8 @@
         v-if="col.type === 'image' && !col.popover"
         @click="col.handle && col.handle(scope.row)"
         :src="
-          (col.formatter && col.formatter(col.field, scope.row, col.codeType)) ||
+          (col.formatter &&
+            col.formatter(col.field, scope.row, col.codeType)) ||
           scope.row[col.field]
         "
         :alt="scope.row[col.field]"
@@ -243,7 +262,8 @@
         :size="size || col.size"
         :class="col.colClass && col.colClass(scope.row)"
         >{{
-          (col.formatter && col.formatter(col.field, scope.row, col.codeType)) ||
+          (col.formatter &&
+            col.formatter(col.field, scope.row, col.codeType)) ||
           scope.row[col.field]
         }}</span
       >
@@ -289,13 +309,19 @@ export default {
     commonProps() {
       return (col) => {
         //checkbox,radio,expand使用vxe自带的;seq自己进行辅助实现
-        if(col.type=='seq' || col.type=='checkbox' || col.type=='radio' || col.type=='expand'){
-          return col
+        if (
+          col.type == "seq" ||
+          col.type == "checkbox" ||
+          col.type == "radio" ||
+          col.type == "expand"
+        ) {
+          return col;
         }
         //其余的就是临时返回一个假的欺骗vxe-column
         return {
-          ...col,type:undefined
-        }
+          ...col,
+          type: undefined,
+        };
       };
     },
   },
